@@ -1,3 +1,3 @@
-module imp-go
+module imp
 
 go 1.19
