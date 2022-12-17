@@ -14,12 +14,12 @@ type TestNumberCase struct {
 }
 
 var testNumberTests = []TestNumberCase{
-	TestNumberCase{-1, NumberExpression(-1), true},
-	TestNumberCase{0, NumberExpression(0), true},
-	TestNumberCase{1, NumberExpression(1), true},
-	TestNumberCase{-1, NumberExpression(-10), false},
-	TestNumberCase{0, NumberExpression(999), false},
-	TestNumberCase{1, NumberExpression(10), false},
+	{-1, NumberExpression(-1), true},
+	{0, NumberExpression(0), true},
+	{1, NumberExpression(1), true},
+	{-1, NumberExpression(-10), false},
+	{0, NumberExpression(999), false},
+	{1, NumberExpression(10), false},
 }
 
 func TestNumber(t *testing.T) {
@@ -39,12 +39,12 @@ type TestPrettyCase struct {
 }
 
 var testPrettyTests = []TestPrettyCase{
-	TestPrettyCase{NumberExpression(-1), "-1", true},
-	TestPrettyCase{NumberExpression(0), "0", true},
-	TestPrettyCase{NumberExpression(1), "1", true},
-	TestPrettyCase{NumberExpression(-1), "-10", false},
-	TestPrettyCase{NumberExpression(0), "999", false},
-	TestPrettyCase{NumberExpression(1), "10", false},
+	{NumberExpression(-1), "-1", true},
+	{NumberExpression(0), "0", true},
+	{NumberExpression(1), "1", true},
+	{NumberExpression(-1), "-10", false},
+	{NumberExpression(0), "999", false},
+	{NumberExpression(1), "10", false},
 }
 
 func TestPretty(t *testing.T) {
@@ -64,12 +64,12 @@ type TestEvalCase struct {
 }
 
 var testEvalTests = []TestEvalCase{
-	TestEvalCase{NumberExpression(-1), IntValue(-1), true},
-	TestEvalCase{NumberExpression(0), IntValue(0), true},
-	TestEvalCase{NumberExpression(1), IntValue(1), true},
-	TestEvalCase{NumberExpression(-1), IntValue(-10), false},
-	TestEvalCase{NumberExpression(0), IntValue(999), false},
-	TestEvalCase{NumberExpression(1), IntValue(10), false},
+	{NumberExpression(-1), IntValue(-1), true},
+	{NumberExpression(0), IntValue(0), true},
+	{NumberExpression(1), IntValue(1), true},
+	{NumberExpression(-1), IntValue(-10), false},
+	{NumberExpression(0), IntValue(999), false},
+	{NumberExpression(1), IntValue(10), false},
 }
 
 func TestEval(t *testing.T) {
@@ -87,12 +87,12 @@ type TestInferCase struct {
 }
 
 var testInferTests = []TestInferCase{
-	TestInferCase{NumberExpression(-1), TypeInt, true},
-	TestInferCase{NumberExpression(0), TypeInt, true},
-	TestInferCase{NumberExpression(1), TypeInt, true},
-	TestInferCase{NumberExpression(-1), TypeBool, false},
-	TestInferCase{NumberExpression(0), TypeBool, false},
-	TestInferCase{NumberExpression(1), TypeBool, false},
+	{NumberExpression(-1), TypeInt, true},
+	{NumberExpression(0), TypeInt, true},
+	{NumberExpression(1), TypeInt, true},
+	{NumberExpression(-1), TypeBool, false},
+	{NumberExpression(0), TypeBool, false},
+	{NumberExpression(1), TypeBool, false},
 }
 
 // TestInfer tests the Infer function
