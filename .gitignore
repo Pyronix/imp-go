@@ -13,3 +13,6 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+/.idea/imp-go.iml
+/.idea/modules.xml
+/.idea/vcs.xml
