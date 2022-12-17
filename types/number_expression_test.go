@@ -8,8 +8,8 @@ import (
 // TestNumber tests the Number function
 
 type TestNumberCase struct {
-	arg1      int
-	expected  NumberExpression
+	input     int
+	want      NumberExpression
 	compliant bool
 }
 
@@ -24,8 +24,8 @@ var testNumberTests = []TestNumberCase{
 
 func TestNumber(t *testing.T) {
 	for _, test := range testNumberTests {
-		if output := Number(test.arg1); output != test.expected && test.compliant {
-			t.Errorf("Output %q not equal to expected %q", output, test.expected)
+		if got := Number(test.input); got != test.want && test.compliant {
+			t.Errorf("got %q not equal to want %q", got, test.want)
 		}
 	}
 }
@@ -33,8 +33,8 @@ func TestNumber(t *testing.T) {
 // TestPretty tests the Pretty function
 
 type TestPrettyCase struct {
-	arg1      NumberExpression
-	expected  string
+	input     NumberExpression
+	want      string
 	compliant bool
 }
 
@@ -49,8 +49,8 @@ var testPrettyTests = []TestPrettyCase{
 
 func TestPretty(t *testing.T) {
 	for _, test := range testPrettyTests {
-		if output := test.arg1.Pretty(); output != test.expected && test.compliant {
-			t.Errorf("Output %q not equal to expected %q", output, test.expected)
+		if got := test.input.Pretty(); got != test.want && test.compliant {
+			t.Errorf("got %q not equal to want %q", got, test.want)
 		}
 	}
 }
@@ -58,8 +58,8 @@ func TestPretty(t *testing.T) {
 // TestEval tests the Eval function
 
 type TestEvalCase struct {
-	arg1      NumberExpression
-	expected  Value
+	input     NumberExpression
+	want      Value
 	compliant bool
 }
 
@@ -74,15 +74,15 @@ var testEvalTests = []TestEvalCase{
 
 func TestEval(t *testing.T) {
 	for _, test := range testEvalTests {
-		if output := test.arg1.Eval(ValueState{}); output != test.expected && test.compliant {
-			t.Errorf("Output %q not equal to expected %q", StructToJson(output), StructToJson(test.expected))
+		if got := test.input.Eval(ValueState{}); got != test.want && test.compliant {
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
 type TestInferCase struct {
-	arg1      NumberExpression
-	expected  Type
+	input     NumberExpression
+	want      Type
 	compliant bool
 }
 
@@ -99,8 +99,8 @@ var testInferTests = []TestInferCase{
 
 func TestInfer(t *testing.T) {
 	for _, test := range testInferTests {
-		if output := test.arg1.Infer(TypeState{}); output != test.expected && test.compliant {
-			t.Errorf("Output %q not equal to expected %q", output, test.expected)
+		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
+			t.Errorf("got %q not equal to want %q", got, test.want)
 		}
 	}
 }
