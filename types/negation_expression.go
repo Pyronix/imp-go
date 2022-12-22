@@ -10,6 +10,7 @@ func Negation(x Expression) Expression {
 
 func (e NegationExpression) Pretty() string {
 	var x string
+
 	x = "!"
 	x += e.Pretty()
 

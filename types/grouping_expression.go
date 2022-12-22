@@ -10,9 +10,10 @@ func Grouping(x Expression) Expression {
 
 func (e GroupingExpression) Pretty() string {
 	var x string
+
 	x = "("
 	x += e.Pretty()
-	x = ")"
+	x += ")"
 
 	return x
 }

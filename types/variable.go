@@ -7,20 +7,18 @@ func (x Variable) Pretty() string {
 }
 
 func (x Variable) Eval(s ValueState) Value {
-	y := (string)(x)
-	ty, ok := s[y]
+	val, ok := s[(string)(x)]
 	if ok {
-		return ty
+		return val
 	} else {
 		return Value{ValueType: Undefined} // variable does not exist yields undefined
 	}
 }
 
 func (x Variable) Infer(t TypeState) Type {
-	y := (string)(x)
-	ty, ok := t[y]
+	typ, ok := t[(string)(x)]
 	if ok {
-		return ty
+		return typ
 	} else {
 		return TypeIllTyped // variable does not exist yields illtyped
 	}

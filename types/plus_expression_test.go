@@ -50,23 +50,23 @@ type TestPlusPrettyCase struct {
 }
 
 var testPlusPrettyTests = []TestPlusPrettyCase{
-	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, "(-1+-1)", true},
-	{PlusExpression{NumberExpression(0), NumberExpression(0)}, "(0+0)", true},
-	{PlusExpression{NumberExpression(1), NumberExpression(1)}, "(1+1)", true},
+	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, "-1+-1", true},
+	{PlusExpression{NumberExpression(0), NumberExpression(0)}, "0+0", true},
+	{PlusExpression{NumberExpression(1), NumberExpression(1)}, "1+1", true},
 
-	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "(true+true)", true},
-	{PlusExpression{BoolExpression(false), BoolExpression(true)}, "(false+true)", true},
-	{PlusExpression{BoolExpression(true), BoolExpression(false)}, "(true+false)", true},
-	{PlusExpression{BoolExpression(false), BoolExpression(false)}, "(false+false)", true},
+	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "true+true", true},
+	{PlusExpression{BoolExpression(false), BoolExpression(true)}, "false+true", true},
+	{PlusExpression{BoolExpression(true), BoolExpression(false)}, "true+false", true},
+	{PlusExpression{BoolExpression(false), BoolExpression(false)}, "false+false", true},
 
-	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, "(-1+1)", false},
-	{PlusExpression{NumberExpression(0), NumberExpression(0)}, "(-1+0)", false},
-	{PlusExpression{NumberExpression(1), NumberExpression(1)}, "(0+0)", false},
+	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, "-1+1", false},
+	{PlusExpression{NumberExpression(0), NumberExpression(0)}, "-1+0", false},
+	{PlusExpression{NumberExpression(1), NumberExpression(1)}, "0+0", false},
 
-	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "(false+true)", false},
-	{PlusExpression{BoolExpression(false), BoolExpression(true)}, "(false+false)", false},
-	{PlusExpression{BoolExpression(true), BoolExpression(false)}, "(true+true)", false},
-	{PlusExpression{BoolExpression(false), BoolExpression(false)}, "(true+true)", false},
+	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "false+true", false},
+	{PlusExpression{BoolExpression(false), BoolExpression(true)}, "false+false", false},
+	{PlusExpression{BoolExpression(true), BoolExpression(false)}, "true+true", false},
+	{PlusExpression{BoolExpression(false), BoolExpression(false)}, "true+true", false},
 }
 
 func TestPlusPretty(t *testing.T) {
