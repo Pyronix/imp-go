@@ -29,12 +29,5 @@ func (e GroupingExpression) Eval(s ValueState) Value {
 }
 
 func (e GroupingExpression) Infer(t TypeState) Type {
-	t1 := e.Infer(t)
-	switch {
-	case t1 == ValueBool:
-		return TypeBool
-	case t1 == ValueInt:
-		return TypeInt
-	}
-	return TypeIllTyped
+	return e.Infer(t)
 }
