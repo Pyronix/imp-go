@@ -1,17 +1,17 @@
 package types
 
-/*
-type NegationExpression Expression
+type NegationExpression struct {
+	Expression
+}
 
 func Negation(x Expression) Expression {
-	return (NegationExpression)(x)
+	return NegationExpression{x}
 }
 
 func (e NegationExpression) Pretty() string {
 	var x string
-	x = "(!"
+	x = "!"
 	x += e.Pretty()
-	x += ")"
 
 	return x
 }
@@ -32,4 +32,3 @@ func (e NegationExpression) Infer(t TypeState) Type {
 	}
 	return TypeIllTyped
 }
-*/
