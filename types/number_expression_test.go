@@ -5,31 +5,6 @@ import (
 	"testing"
 )
 
-// TestNumber tests the Number function
-
-type TestNumberCase struct {
-	input     int
-	want      NumberExpression
-	compliant bool
-}
-
-var testNumberTests = []TestNumberCase{
-	{-1, NumberExpression(-1), true},
-	{0, NumberExpression(0), true},
-	{1, NumberExpression(1), true},
-	{-1, NumberExpression(-10), false},
-	{0, NumberExpression(999), false},
-	{1, NumberExpression(10), false},
-}
-
-func TestNumber(t *testing.T) {
-	for _, test := range testNumberTests {
-		if got := Number(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
-		}
-	}
-}
-
 // TestPretty tests the Pretty function
 
 type TestPrettyCase struct {
