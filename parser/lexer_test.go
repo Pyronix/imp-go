@@ -30,6 +30,10 @@ var nextTests = []nextTest{
 		{0, IDENTIFIER, "myVar"},
 		{5, EOF, ""},
 	}},
+	{"while_var_13", []Token{
+		{0, IDENTIFIER, "while_var_13"},
+		{12, EOF, ""},
+	}},
 
 	// Test for BLOCKOPEN
 	{"{", []Token{
@@ -89,6 +93,36 @@ var nextTests = []nextTest{
 		{5, EOF, ""},
 	}},
 
+	// Tests for INT
+	{"1", []Token{
+		{0, INT, "1"},
+		{1, EOF, ""},
+	}},
+	{"-1", []Token{
+		{0, INT, "-1"},
+		{2, EOF, ""},
+	}},
+	{"1234567890", []Token{
+		{0, INT, "1234567890"},
+		{10, EOF, ""},
+	}},
+	{"-1234567890", []Token{
+		{0, INT, "-1234567890"},
+		{11, EOF, ""},
+	}},
+	{"1a", []Token{
+		{0, ERROR, "bad number syntax: \"1a\""},
+	}},
+
+	// Tests for BOOL
+	{"true", []Token{
+		{0, BOOL, "true"},
+		{4, EOF, ""},
+	}},
+	{"false", []Token{
+		{0, BOOL, "false"},
+		{5, EOF, ""},
+	}},
 	// Tests for ADD
 	{"+", []Token{
 		{0, ADD, "+"},
@@ -141,34 +175,6 @@ var nextTests = []nextTest{
 	{")", []Token{
 		{0, CLOSE, ")"},
 		{1, EOF, ""},
-	}},
-
-	// Tests for INT
-	{"1", []Token{
-		{0, INT, "1"},
-		{1, EOF, ""},
-	}},
-	{"-1", []Token{
-		{0, INT, "-1"},
-		{2, EOF, ""},
-	}},
-	{"1234567890", []Token{
-		{0, INT, "1234567890"},
-		{10, EOF, ""},
-	}},
-	{"-1234567890", []Token{
-		{0, INT, "-1234567890"},
-		{11, EOF, ""},
-	}},
-
-	// Tests for BOOL
-	{"true", []Token{
-		{0, BOOL, "true"},
-		{4, EOF, ""},
-	}},
-	{"false", []Token{
-		{0, BOOL, "false"},
-		{5, EOF, ""},
 	}},
 
 	// Test for multiple tokens

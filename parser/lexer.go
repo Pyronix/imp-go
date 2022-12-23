@@ -7,6 +7,12 @@ import (
 	"unicode/utf8"
 )
 
+const numbers = "0123456789"
+const lowerLetters = "abcdefghijklmnopqrstuvwxyz"
+const upperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const letters = lowerLetters + upperLetters
+const alphaNumeric = letters + numbers
+
 type TokenType int
 
 const (
@@ -197,7 +203,7 @@ func (l *Lexer) takeMany(valid string) bool {
 }
 
 // takes a full literal exactly
-func (l *Lexer) takeLiteral(literal string) bool {
+func (l *Lexer) takeExactly(literal string) bool {
 	taken := 0
 	for _, char := range literal {
 		if l.take(string(char)) {
@@ -247,18 +253,6 @@ func lexCode(l *Lexer) LexerStateFunc {
 			l.emit(EQUAL)
 		} else if next == '=' {
 			l.emit(ASSIGMENT)
-		} else if next == 'w' && l.takeLiteral("hile") {
-			l.emit(WHILE)
-		} else if next == 'i' && l.takeLiteral("f") {
-			l.emit(IF)
-		} else if next == 'e' && l.takeLiteral("lse") {
-			l.emit(ELSE)
-		} else if next == 'p' && l.takeLiteral("rint") {
-			l.emit(PRINT)
-		} else if next == 't' && l.takeLiteral("rue") {
-			l.emit(BOOL)
-		} else if next == 'f' && l.takeLiteral("alse") {
-			l.emit(BOOL)
 		} else if next == '+' {
 			l.emit(ADD)
 		} else if next == '*' {
@@ -275,10 +269,10 @@ func lexCode(l *Lexer) LexerStateFunc {
 			l.emit(OPEN)
 		} else if next == ')' {
 			l.emit(CLOSE)
-		} else if strings.ContainsRune("abcdefghijklmnopqrstuvwxyz", next) {
+		} else if strings.ContainsRune(lowerLetters, next) {
 			l.rewind()
-			return lexIdentifier
-		} else if next == '-' || strings.ContainsRune("0123456789", next) {
+			return lexWord
+		} else if next == '-' || strings.ContainsRune(numbers, next) {
 			l.rewind()
 			return lexInt
 		} else {
@@ -289,14 +283,38 @@ func lexCode(l *Lexer) LexerStateFunc {
 	return nil
 }
 
-func lexIdentifier(l *Lexer) LexerStateFunc {
-	next := l.next()
-
-	if !strings.ContainsRune("abcdefghijklmnopqrstuvwxyz", next) {
-		l.emit(ILLEGAL)
+func lexWord(l *Lexer) LexerStateFunc {
+	// check for reserved words
+	if l.takeExactly("while") && !strings.ContainsRune(alphaNumeric+"_", l.peek()) {
+		l.emit(WHILE)
+		return lexCode
+	}
+	if l.takeExactly("if") && !strings.ContainsRune(alphaNumeric+"_", l.peek()) {
+		l.emit(IF)
+		return lexCode
+	}
+	if l.takeExactly("else") && !strings.ContainsRune(alphaNumeric+"_", l.peek()) {
+		l.emit(ELSE)
+		return lexCode
+	}
+	if l.takeExactly("print") && !strings.ContainsRune(alphaNumeric+"_", l.peek()) {
+		l.emit(PRINT)
+		return lexCode
+	}
+	if l.takeExactly("true") && !strings.ContainsRune(alphaNumeric+"_", l.peek()) {
+		l.emit(BOOL)
+		return lexCode
+	}
+	if l.takeExactly("false") && !strings.ContainsRune(alphaNumeric+"_", l.peek()) {
+		l.emit(BOOL)
+		return lexCode
 	}
 
-	l.takeMany("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	return lexIdentifier
+}
+
+func lexIdentifier(l *Lexer) LexerStateFunc {
+	l.takeMany(alphaNumeric + "_")
 	l.emit(IDENTIFIER)
 
 	return lexCode
@@ -304,7 +322,12 @@ func lexIdentifier(l *Lexer) LexerStateFunc {
 
 func lexInt(l *Lexer) LexerStateFunc {
 	l.take("-")
-	l.takeMany("0123456789")
+	l.takeMany(numbers)
+
+	if strings.ContainsRune(alphaNumeric, l.peek()) {
+		l.next()
+		return l.errorf("bad number syntax: %q", l.current())
+	}
 	l.emit(INT)
 
 	return lexCode
