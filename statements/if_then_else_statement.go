@@ -25,3 +25,25 @@ func (ite IfThenElseStatement) Eval(s types.ValueState) {
 		fmt.Printf("if-then-else Eval fail")
 	}
 }
+
+func (ite IfThenElseStatement) Pretty(s types.ValueState) string {
+	var x string
+	x = "if "
+	x += ite.cond.Pretty()
+	x += " { "
+	x += ite.thenStmt.Pretty()
+	x += " } else { "
+	x += ite.elseStmt.Pretty()
+	x += " }"
+
+	return x
+}
+
+func (ite IfThenElseStatement) Check(t types.TypeState) bool {
+	ty := ite.cond.Infer(t)
+	if ty == types.TypeIllTyped {
+		return false
+	}
+
+	return ite.thenStmt.Check(t) && ite.elseStmt.Check(t)
+}
