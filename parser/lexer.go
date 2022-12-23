@@ -203,9 +203,9 @@ func (l *Lexer) takeMany(valid string) bool {
 }
 
 // takes a full literal exactly
-func (l *Lexer) takeExactly(literal string) bool {
+func (l *Lexer) takeExactly(str string) bool {
 	taken := 0
-	for _, char := range literal {
+	for _, char := range str {
 		if l.take(string(char)) {
 			taken++
 		} else {
@@ -234,53 +234,50 @@ func (l *Lexer) errorf(format string, args ...interface{}) LexerStateFunc {
 
 func lexCode(l *Lexer) LexerStateFunc {
 	for {
-		next := l.next()
-
-		if next == EOFRune {
+		switch next := l.next(); {
+		case next == EOFRune:
 			l.emit(EOF)
-			break
-		} else if unicode.IsSpace(next) {
+			return nil
+		case unicode.IsSpace(next):
 			l.ignore()
-		} else if next == '{' {
+		case next == '{':
 			l.emit(BLOCKOPEN)
-		} else if next == '}' {
+		case next == '}':
 			l.emit(BLOCKCLOSE)
-		} else if next == ';' {
+		case next == ';':
 			l.emit(SEMICOLON)
-		} else if next == ':' && l.take("=") {
+		case next == ':' && l.take("="):
 			l.emit(DECLARATION)
-		} else if next == '=' && l.take("=") {
+		case next == '=' && l.take("="):
 			l.emit(EQUAL)
-		} else if next == '=' {
+		case next == '=':
 			l.emit(ASSIGMENT)
-		} else if next == '+' {
+		case next == '+':
 			l.emit(ADD)
-		} else if next == '*' {
+		case next == '*':
 			l.emit(MUL)
-		} else if next == '|' && l.take("|") {
+		case next == '|' && l.take("|"):
 			l.emit(OR)
-		} else if next == '&' && l.take("&") {
+		case next == '&' && l.take("&"):
 			l.emit(AND)
-		} else if next == '!' {
+		case next == '!':
 			l.emit(NOT)
-		} else if next == '<' {
+		case next == '<':
 			l.emit(LESS)
-		} else if next == '(' {
+		case next == '(':
 			l.emit(OPEN)
-		} else if next == ')' {
+		case next == ')':
 			l.emit(CLOSE)
-		} else if strings.ContainsRune(lowerLetters, next) {
+		case strings.ContainsRune(lowerLetters, next):
 			l.rewind()
 			return lexWord
-		} else if next == '-' || strings.ContainsRune(numbers, next) {
+		case next == '-' || strings.ContainsRune(numbers, next):
 			l.rewind()
 			return lexInt
-		} else {
+		default:
 			l.emit(ILLEGAL)
 		}
 	}
-
-	return nil
 }
 
 func lexWord(l *Lexer) LexerStateFunc {
