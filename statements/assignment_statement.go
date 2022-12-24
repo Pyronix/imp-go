@@ -2,15 +2,15 @@ package statements
 
 import (
 	"fmt"
-	"imp/types"
+	. "imp/types"
 )
 
 type AssignmentStatement struct {
 	lhs string
-	rhs types.Expression
+	rhs Expression
 }
 
-func (ass AssignmentStatement) Eval(s types.ValueState) {
+func (ass AssignmentStatement) Eval(s ValueState) {
 	v := ass.rhs.Eval(s)
 	x := (string)(ass.lhs)
 	if v.ValueType == s[x].ValueType {
@@ -24,16 +24,16 @@ func (ass AssignmentStatement) Pretty() string {
 	return ass.lhs + " = " + ass.rhs.Pretty()
 }
 
-func (ass AssignmentStatement) Check(t types.TypeState) bool {
+func (ass AssignmentStatement) Check(t TypeState) bool {
 	ty := ass.rhs.Infer(t)
-	if ty == types.TypeIllTyped {
+	if ty == TypeIllTyped {
 		return false
 	}
 
 	x := (string)(ass.lhs)
-	if t[x] != ass.rhs.Infer(t) {
+	if t[x] != ty {
 		return false
 	}
-	t[x] = ty
+
 	return true
 }

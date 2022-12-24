@@ -2,18 +2,18 @@ package statements
 
 import (
 	"fmt"
-	"imp/types"
+	. "imp/types"
 )
 
 type IfThenElseStatement struct {
-	cond     types.Expression
+	cond     Expression
 	thenStmt Statement
 	elseStmt Statement
 }
 
-func (ite IfThenElseStatement) Eval(s types.ValueState) {
+func (ite IfThenElseStatement) Eval(s ValueState) {
 	v := ite.cond.Eval(s)
-	if v.ValueType == types.ValueBool {
+	if v.ValueType == ValueBool {
 		switch {
 		case v.BoolValue:
 			ite.thenStmt.Eval(s)
@@ -26,7 +26,7 @@ func (ite IfThenElseStatement) Eval(s types.ValueState) {
 	}
 }
 
-func (ite IfThenElseStatement) Pretty(s types.ValueState) string {
+func (ite IfThenElseStatement) Pretty(s ValueState) string {
 	var x string
 	x = "if "
 	x += ite.cond.Pretty()
@@ -39,9 +39,9 @@ func (ite IfThenElseStatement) Pretty(s types.ValueState) string {
 	return x
 }
 
-func (ite IfThenElseStatement) Check(t types.TypeState) bool {
+func (ite IfThenElseStatement) Check(t TypeState) bool {
 	ty := ite.cond.Infer(t)
-	if ty == types.TypeIllTyped {
+	if ty == TypeIllTyped {
 		return false
 	}
 

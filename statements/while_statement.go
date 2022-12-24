@@ -2,19 +2,19 @@ package statements
 
 import (
 	"fmt"
-	"imp/types"
+	. "imp/types"
 )
 
 type WhileStatement struct {
-	cond types.Expression
+	cond Expression
 	stmt Statement
 }
 
-func (whi WhileStatement) Eval(s types.ValueState) {
+func (whi WhileStatement) Eval(s ValueState) {
 	// TODO: WIP
 	v := whi.cond.Eval(s)
 
-	if v.ValueType == types.ValueBool {
+	if v.ValueType == ValueBool {
 
 	} else {
 		fmt.Printf("while Eval fail")
@@ -27,7 +27,7 @@ func (whi WhileStatement) Eval(s types.ValueState) {
 
 }
 
-func (whi WhileStatement) Pretty(s types.ValueState) string {
+func (whi WhileStatement) Pretty(s ValueState) string {
 	var x string
 	x = "while "
 	x += whi.cond.Pretty()
@@ -38,9 +38,9 @@ func (whi WhileStatement) Pretty(s types.ValueState) string {
 	return x
 }
 
-func (whi WhileStatement) Check(t types.TypeState) bool {
+func (whi WhileStatement) Check(t TypeState) bool {
 	ty := whi.cond.Infer(t)
-	if ty == types.TypeIllTyped {
+	if ty == TypeIllTyped {
 		return false
 	}
 
