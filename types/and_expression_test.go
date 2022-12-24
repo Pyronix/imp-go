@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// TestPretty tests the Pretty function
+// TestAndPretty tests the Pretty function
 
 type TestAndPrettyCase struct {
 	input     AndExpression
@@ -35,7 +35,7 @@ func TestAndPretty(t *testing.T) {
 	}
 }
 
-// TestEval tests the Eval function
+// TestAndEval tests the Eval function
 
 type TestAndEvalCase struct {
 	input     AndExpression
@@ -96,7 +96,7 @@ var testAndInferTests = []TestAndInferCase{
 	{AndExpression{NumberExpression(0), NumberExpression(0)}, TypeInt, false},
 }
 
-// TestInfer tests the Infer function
+// TestAndInfer tests the Infer function
 
 func TestAndInfer(t *testing.T) {
 	for _, test := range testAndInferTests {

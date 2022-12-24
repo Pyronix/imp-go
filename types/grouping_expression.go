@@ -12,14 +12,14 @@ func (e GroupingExpression) Pretty() string {
 	var x string
 
 	x = "("
-	x += e.Pretty()
+	x += e.Expression.Pretty()
 	x += ")"
 
 	return x
 }
 
 func (e GroupingExpression) Eval(s ValueState) Value {
-	b := e.Eval(s)
+	b := e.Expression.Eval(s)
 	switch {
 	case b.ValueType == ValueBool:
 		return BoolValue(b.BoolValue)
@@ -30,5 +30,5 @@ func (e GroupingExpression) Eval(s ValueState) Value {
 }
 
 func (e GroupingExpression) Infer(t TypeState) Type {
-	return e.Infer(t)
+	return e.Expression.Infer(t)
 }
