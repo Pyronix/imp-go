@@ -40,12 +40,12 @@ type TestEqualityPrettyCase struct {
 }
 
 var testEqualityPrettyTests = []TestEqualityPrettyCase{
-	{EqualityExpression{NumberExpression(-1), NumberExpression(-1)}, "(-1 == -1)", true},
-	{EqualityExpression{NumberExpression(-1), NumberExpression(1)}, "(-1 == 1)", true},
-	{EqualityExpression{NumberExpression(1), NumberExpression(-1)}, "(1 == -1)", true},
-	{EqualityExpression{BoolExpression(true), NumberExpression(0)}, "(true == 0)", true},
-	{EqualityExpression{NumberExpression(0), BoolExpression(true)}, "(0 == true)", true},
-	{EqualityExpression{BoolExpression(true), BoolExpression(false)}, "(true == false)", true},
+	{EqualityExpression{NumberExpression(-1), NumberExpression(-1)}, "-1 == -1", true},
+	{EqualityExpression{NumberExpression(-1), NumberExpression(1)}, "-1 == 1", true},
+	{EqualityExpression{NumberExpression(1), NumberExpression(-1)}, "1 == -1", true},
+	{EqualityExpression{BoolExpression(true), NumberExpression(0)}, "true == 0", true},
+	{EqualityExpression{NumberExpression(0), BoolExpression(true)}, "0 == true", true},
+	{EqualityExpression{BoolExpression(true), BoolExpression(false)}, "true == false", true},
 	{EqualityExpression{BoolExpression(true), BoolExpression(true)}, "???", false},
 	{EqualityExpression{NumberExpression(-1), NumberExpression(-1)}, "???", false},
 	{EqualityExpression{NumberExpression(0), BoolExpression(true)}, "???", false},
