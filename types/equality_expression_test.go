@@ -104,7 +104,7 @@ type TestEqualityInferCase struct {
 }
 
 var TestEqualityInferTests = []TestEqualityInferCase{
-	{EqualityExpression{NumberExpression(-1), NumberExpression(-1)}, TypeInt, true},
+	{EqualityExpression{NumberExpression(-1), NumberExpression(-1)}, TypeBool, true},
 	{EqualityExpression{BoolExpression(true), BoolExpression(true)}, TypeBool, true},
 	{EqualityExpression{NumberExpression(-1), BoolExpression(true)}, TypeIllTyped, true},
 

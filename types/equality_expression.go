@@ -35,7 +35,7 @@ func (e EqualityExpression) Infer(t TypeState) Type {
 		return TypeBool
 	}
 	if t1 == TypeInt && t2 == TypeInt {
-		return TypeInt
+		return TypeBool
 	}
 	return TypeIllTyped
 }

@@ -5,6 +5,34 @@ import (
 	"testing"
 )
 
+// TestOr tests the Equal function
+
+type TestOrCase struct {
+	input     Expression
+	input2    Expression
+	want      OrExpression
+	compliant bool
+}
+
+var testOrTests = []TestOrCase{
+	{BoolExpression(true), BoolExpression(true), OrExpression{BoolExpression(true), BoolExpression(true)}, true},
+	{BoolExpression(false), BoolExpression(true), OrExpression{BoolExpression(false), BoolExpression(true)}, true},
+	{NumberExpression(1), NumberExpression(1), OrExpression{NumberExpression(1), NumberExpression(1)}, true},
+	{BoolExpression(true), NumberExpression(1), OrExpression{BoolExpression(true), NumberExpression(1)}, true},
+
+	{BoolExpression(true), BoolExpression(true), OrExpression{BoolExpression(true), BoolExpression(false)}, false},
+	{NumberExpression(1), NumberExpression(1), OrExpression{NumberExpression(1), NumberExpression(0)}, false},
+	{BoolExpression(true), NumberExpression(1), OrExpression{BoolExpression(true), BoolExpression(true)}, false},
+}
+
+func TestOr(t *testing.T) {
+	for _, test := range testOrTests {
+		if got := Or(test.input, test.input2); got != test.want && test.compliant {
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		}
+	}
+}
+
 // TestPretty tests the Pretty function
 
 type TestOrPrettyCase struct {

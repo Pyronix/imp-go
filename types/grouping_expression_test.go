@@ -5,6 +5,31 @@ import (
 	"testing"
 )
 
+// TestEqual tests the Equal function
+
+type TestGroupingCase struct {
+	input     Expression
+	want      GroupingExpression
+	compliant bool
+}
+
+var testGroupingTests = []TestGroupingCase{
+	{BoolExpression(true), GroupingExpression{BoolExpression(true)}, true},
+	{NumberExpression(1), GroupingExpression{NumberExpression(1)}, true},
+	{AndExpression{BoolExpression(true), BoolExpression(true)}, GroupingExpression{AndExpression{BoolExpression(true), BoolExpression(true)}}, false},
+
+	{BoolExpression(true), GroupingExpression{NumberExpression(1)}, false},
+	{NumberExpression(1), GroupingExpression{BoolExpression(true)}, false},
+}
+
+func TestGrouping(t *testing.T) {
+	for _, test := range testGroupingTests {
+		if got := Grouping(test.input); got != test.want && test.compliant {
+			t.Errorf("got %q not equal to want %q", got, test.want)
+		}
+	}
+}
+
 // TestGroupingPretty tests the Pretty function
 
 type TestGroupingPrettyCase struct {
