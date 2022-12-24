@@ -10,7 +10,7 @@ func (e LesserExpression) Pretty() string {
 	var x string
 
 	x = e[0].Pretty()
-	x += "<"
+	x += " < "
 	x += e[1].Pretty()
 
 	return x
@@ -30,7 +30,7 @@ func (e LesserExpression) Infer(t TypeState) Type {
 	t1 := e[0].Infer(t)
 	t2 := e[1].Infer(t)
 	if t1 == TypeInt && t2 == TypeInt {
-		return TypeInt
+		return TypeBool
 	}
 	return TypeIllTyped
 }
