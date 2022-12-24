@@ -5,6 +5,8 @@ import (
 	"testing"
 )
 
+// TestAnd tests the And function
+
 type TestAndCase struct {
 	input1    Expression
 	input2    Expression
@@ -28,7 +30,7 @@ var testAndTests = []TestAndCase{
 func TestAnd(t *testing.T) {
 	for _, test := range testAndTests {
 		if got := And(test.input1, test.input2); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got.Pretty(), test.want.Pretty())
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -58,7 +60,7 @@ var testAndPrettyTests = []TestAndPrettyCase{
 func TestAndPretty(t *testing.T) {
 	for _, test := range testAndPrettyTests {
 		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -129,7 +131,7 @@ var testAndInferTests = []TestAndInferCase{
 func TestAndInfer(t *testing.T) {
 	for _, test := range testAndInferTests {
 		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }

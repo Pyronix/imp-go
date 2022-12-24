@@ -31,12 +31,12 @@ var testEqualTests = []TestEqualCase{
 func TestEqual(t *testing.T) {
 	for _, test := range testEqualTests {
 		if got := Equal(test.input, test.input2); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestPretty tests the Pretty function
+// TestEqualityPretty tests the Pretty function
 
 type TestEqualityPrettyCase struct {
 	input     EqualityExpression
@@ -59,7 +59,7 @@ var testEqualityPrettyTests = []TestEqualityPrettyCase{
 func TestEqualityPretty(t *testing.T) {
 	for _, test := range testEqualityPrettyTests {
 		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -119,7 +119,7 @@ var TestEqualityInferTests = []TestEqualityInferCase{
 func TestEqualityInfer(t *testing.T) {
 	for _, test := range TestEqualityInferTests {
 		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
