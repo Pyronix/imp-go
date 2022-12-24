@@ -22,12 +22,12 @@ var testLesserTests = []TestLesserCase{
 func TestLesser(t *testing.T) {
 	for _, test := range testLesserTests {
 		if got := Lesser(test.input, test.input2); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestPretty tests the Pretty function
+// TestLesserPretty tests the Pretty function
 
 type TestLesserPrettyCase struct {
 	input     LesserExpression
@@ -43,7 +43,7 @@ var testLesserPrettyTests = []TestLesserPrettyCase{
 func TestLesserPretty(t *testing.T) {
 	for _, test := range testLesserPrettyTests {
 		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -87,7 +87,7 @@ var TestLesserInferTests = []TestLesserInferCase{
 func TestLesserInfer(t *testing.T) {
 	for _, test := range TestLesserInferTests {
 		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }

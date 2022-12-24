@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// TestPlus tests the Mult function
+// TestPlus tests the Plus function
 
 type TestPlusCase struct {
 	input1    Expression
@@ -22,12 +22,12 @@ var testPlusTests = []TestPlusCase{
 func TestPlus(t *testing.T) {
 	for _, test := range testPlusTests {
 		if got := Plus(test.input1, test.input2); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestPretty tests the Pretty function
+// TestPlusPretty tests the Pretty function
 
 type TestPlusPrettyCase struct {
 	input     PlusExpression
@@ -48,12 +48,12 @@ var testPlusPrettyTests = []TestPlusPrettyCase{
 func TestPlusPretty(t *testing.T) {
 	for _, test := range testPlusPrettyTests {
 		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestEval tests the Eval function
+// TestPlusEval tests the Eval function
 
 type TestPlusEvalCase struct {
 	input     PlusExpression
@@ -116,12 +116,12 @@ var testPlusInferTests = []TestPlusInferCase{
 	{PlusExpression{BoolExpression(true), BoolExpression(true)}, TypeBool, false},
 }
 
-// TestInfer tests the Infer function
+// TestPlusInfer tests the Infer function
 
 func TestPlusInfer(t *testing.T) {
 	for _, test := range testPlusInferTests {
 		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }

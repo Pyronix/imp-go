@@ -37,12 +37,12 @@ var testMultTests = []TestMultCase{
 func TestMult(t *testing.T) {
 	for _, test := range testMultTests {
 		if got := Mult(test.input1, test.input2); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestPretty tests the Pretty function
+// TestMultPretty tests the Pretty function
 
 type TestMultPrettyCase struct {
 	input     MultExpression
@@ -73,12 +73,12 @@ var testMultPrettyTests = []TestMultPrettyCase{
 func TestMultPretty(t *testing.T) {
 	for _, test := range testMultPrettyTests {
 		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestEval tests the Eval function
+// TestMultEval tests the Eval function
 
 type TestMultEvalCase struct {
 	input     MultExpression
@@ -149,12 +149,12 @@ var testMultInferTests = []TestMultInferCase{
 	{MultExpression{BoolExpression(true), BoolExpression(true)}, TypeBool, false},
 }
 
-// TestInfer tests the Infer function
+// TestMultInfer tests the Infer function
 
 func TestMultInfer(t *testing.T) {
 	for _, test := range testMultInferTests {
 		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }

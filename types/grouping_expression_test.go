@@ -25,7 +25,7 @@ var testGroupingTests = []TestGroupingCase{
 func TestGrouping(t *testing.T) {
 	for _, test := range testGroupingTests {
 		if got := Grouping(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -48,7 +48,7 @@ var testGroupingPrettyTests = []TestGroupingPrettyCase{
 func TestGroupingPretty(t *testing.T) {
 	for _, test := range testGroupingPrettyTests {
 		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -83,6 +83,8 @@ func TestGroupingEval(t *testing.T) {
 	}
 }
 
+// TestGroupingInfer tests the Infer function
+
 type TestGroupingInferCase struct {
 	input     GroupingExpression
 	want      Type
@@ -99,12 +101,10 @@ var testGroupingInferTests = []TestGroupingInferCase{
 	{GroupingExpression{OrExpression{NumberExpression(-1), BoolExpression(true)}}, TypeBool, false},
 }
 
-// TestGroupingInfer tests the Infer function
-
 func TestGroupingInfer(t *testing.T) {
 	for _, test := range testGroupingInferTests {
 		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }

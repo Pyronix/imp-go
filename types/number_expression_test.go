@@ -23,7 +23,7 @@ var testNumberTests = []TestNumberCase{
 func TestNumber(t *testing.T) {
 	for _, test := range testNumberTests {
 		if got := Number(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want.Pretty())
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -48,7 +48,7 @@ var testNumberPrettyTests = []TestNumberPrettyCase{
 func TestNumberPretty(t *testing.T) {
 	for _, test := range testNumberPrettyTests {
 		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -93,12 +93,12 @@ var testNumberInferTests = []TestNumberInferCase{
 	{NumberExpression(1), TypeBool, false},
 }
 
-// TestInfer tests the Infer function
+// TestNumberInfer tests the Infer function
 
 func TestNumberInfer(t *testing.T) {
 	for _, test := range testNumberInferTests {
 		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }

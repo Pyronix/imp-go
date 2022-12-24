@@ -33,7 +33,7 @@ func TestOr(t *testing.T) {
 	}
 }
 
-// TestPretty tests the Pretty function
+// TestOrPretty tests the Pretty function
 
 type TestOrPrettyCase struct {
 	input     OrExpression
@@ -58,12 +58,12 @@ var testOrPrettyTests = []TestOrPrettyCase{
 func TestOrPretty(t *testing.T) {
 	for _, test := range testOrPrettyTests {
 		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestEval tests the Eval function
+// TestOrEval tests the Eval function
 
 type TestOrEvalCase struct {
 	input     OrExpression
@@ -124,12 +124,12 @@ var testOrInferTests = []TestOrInferCase{
 	{OrExpression{NumberExpression(0), NumberExpression(0)}, TypeInt, false},
 }
 
-// TestInfer tests the Infer function
+// TestOrInfer tests the Infer function
 
 func TestOrInfer(t *testing.T) {
 	for _, test := range testOrInferTests {
 		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }

@@ -1,7 +1,7 @@
 package types
 
 import (
-	"imp/helper"
+	. "imp/helper"
 	"testing"
 )
 
@@ -21,7 +21,7 @@ var testIntValueTests = []TestIntValueCase{
 func TestIntValue(t *testing.T) {
 	for _, test := range testIntValueTests {
 		if got := IntValue(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", helper.StructToJson(got), helper.StructToJson(test.want))
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -42,7 +42,7 @@ var testBoolValueTests = []TestBoolValueCase{
 func TestBoolValue(t *testing.T) {
 	for _, test := range testBoolValueTests {
 		if got := BoolValue(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", helper.StructToJson(got), helper.StructToJson(test.want))
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -62,7 +62,7 @@ var testUndefinedValueTests = []TestUndefinedValueCase{
 func TestUndefinedValue(t *testing.T) {
 	for _, test := range testUndefinedValueTests {
 		if got := UndefinedValue(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", helper.StructToJson(got), helper.StructToJson(test.want))
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -92,7 +92,7 @@ var testShowValTests = []TestShowValCase{
 func TestShowVal(t *testing.T) {
 	for _, test := range testShowValTests {
 		if got := ShowVal(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
