@@ -8,19 +8,24 @@ import (
 // TestEqual tests the Equal function
 
 type TestEqualCase struct {
-	input     NumberExpression
-	input2    NumberExpression
+	input     Expression
+	input2    Expression
 	want      EqualityExpression
 	compliant bool
 }
 
 var testEqualTests = []TestEqualCase{
-	{NumberExpression(-1), NumberExpression(-1), EqualityExpression{NumberExpression(-1), NumberExpression(-1)}, true},
-	{NumberExpression(0), NumberExpression(0), EqualityExpression{NumberExpression(0), NumberExpression(0)}, true},
+	{BoolExpression(true), BoolExpression(true), EqualityExpression{BoolExpression(true), BoolExpression(true)}, true},
+	{BoolExpression(false), BoolExpression(true), EqualityExpression{BoolExpression(false), BoolExpression(true)}, true},
 	{NumberExpression(1), NumberExpression(1), EqualityExpression{NumberExpression(1), NumberExpression(1)}, true},
-	{NumberExpression(-1), NumberExpression(-10), EqualityExpression{NumberExpression(-1), NumberExpression(-10)}, false},
-	{NumberExpression(0), NumberExpression(999), EqualityExpression{NumberExpression(0), NumberExpression(999)}, false},
-	{NumberExpression(1), NumberExpression(10), EqualityExpression{NumberExpression(1), NumberExpression(10)}, false},
+
+	{BoolExpression(true), NumberExpression(1), EqualityExpression{BoolExpression(true), NumberExpression(1)}, true},
+
+	{BoolExpression(true), BoolExpression(true), EqualityExpression{BoolExpression(true), BoolExpression(false)}, false},
+	{NumberExpression(1), NumberExpression(1), EqualityExpression{NumberExpression(1), NumberExpression(0)}, false},
+
+	{BoolExpression(true), NumberExpression(1), EqualityExpression{BoolExpression(true), BoolExpression(true)}, false},
+	{BoolExpression(true), NumberExpression(-1), EqualityExpression{BoolExpression(true), BoolExpression(false)}, false},
 }
 
 func TestEqual(t *testing.T) {
@@ -62,18 +67,26 @@ func TestEqualityPretty(t *testing.T) {
 // TestEqualityEval tests the Eval function
 
 type TestEqualityEvalCase struct {
-	input     NumberExpression
+	input     Expression
 	want      Value
 	compliant bool
 }
 
 var TestEqualityEvalTests = []TestEqualityEvalCase{
-	{NumberExpression(-1), IntValue(-1), true},
-	{NumberExpression(0), IntValue(0), true},
-	{NumberExpression(1), IntValue(1), true},
-	{NumberExpression(-1), IntValue(-10), false},
-	{NumberExpression(0), IntValue(999), false},
-	{NumberExpression(1), IntValue(10), false},
+	{EqualityExpression{BoolExpression(true), BoolExpression(true)}, BoolValue(true), true},
+	{EqualityExpression{BoolExpression(true), BoolExpression(false)}, BoolValue(false), true},
+
+	{EqualityExpression{NumberExpression(1), NumberExpression(1)}, BoolValue(true), true},
+	{EqualityExpression{NumberExpression(1), NumberExpression(-1)}, BoolValue(false), true},
+	{EqualityExpression{BoolExpression(true), NumberExpression(1)}, UndefinedValue(), true},
+	{EqualityExpression{NumberExpression(1), BoolExpression(true)}, UndefinedValue(), true},
+
+	{EqualityExpression{BoolExpression(true), NumberExpression(1)}, BoolValue(true), false},
+	{EqualityExpression{BoolExpression(false), NumberExpression(1)}, IntValue(1), false},
+	{EqualityExpression{BoolExpression(false), NumberExpression(1)}, BoolValue(false), false},
+
+	{EqualityExpression{BoolExpression(true), BoolExpression(true)}, UndefinedValue(), false},
+	{EqualityExpression{NumberExpression(1), NumberExpression(1)}, UndefinedValue(), false},
 }
 
 func TestEqualityEval(t *testing.T) {
@@ -85,18 +98,20 @@ func TestEqualityEval(t *testing.T) {
 }
 
 type TestEqualityInferCase struct {
-	input     NumberExpression
+	input     EqualityExpression
 	want      Type
 	compliant bool
 }
 
 var TestEqualityInferTests = []TestEqualityInferCase{
-	{NumberExpression(-1), TypeInt, true},
-	{NumberExpression(0), TypeInt, true},
-	{NumberExpression(1), TypeInt, true},
-	{NumberExpression(-1), TypeBool, false},
-	{NumberExpression(0), TypeBool, false},
-	{NumberExpression(1), TypeBool, false},
+	{EqualityExpression{NumberExpression(-1), NumberExpression(-1)}, TypeInt, true},
+	{EqualityExpression{BoolExpression(true), BoolExpression(true)}, TypeBool, true},
+	{EqualityExpression{NumberExpression(-1), BoolExpression(true)}, TypeIllTyped, true},
+
+	{EqualityExpression{NumberExpression(-1), BoolExpression(true)}, TypeInt, false},
+	{EqualityExpression{NumberExpression(-1), BoolExpression(true)}, TypeBool, false},
+	{EqualityExpression{BoolExpression(true), BoolExpression(true)}, TypeIllTyped, false},
+	{EqualityExpression{BoolExpression(true), BoolExpression(true)}, TypeInt, false},
 }
 
 // TestEqualityInfer tests the Infer function

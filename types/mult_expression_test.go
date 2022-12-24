@@ -34,7 +34,7 @@ var testMultTests = []TestMultCase{
 	{BoolExpression(false), BoolExpression(false), MultExpression{BoolExpression(true), BoolExpression(false)}, false},
 }
 
-func TestMultNumber(t *testing.T) {
+func TestMult(t *testing.T) {
 	for _, test := range testMultTests {
 		if got := Mult(test.input1, test.input2); got != test.want && test.compliant {
 			t.Errorf("got %q not equal to want %q", got, test.want)
@@ -88,7 +88,7 @@ type TestMultEvalCase struct {
 
 var testMultEvalTests = []TestMultEvalCase{
 	{MultExpression{NumberExpression(-1), NumberExpression(-1)}, IntValue(1), true},
-	{MultExpression{NumberExpression(0), NumberExpression(0)}, IntValue(0), true},
+	{MultExpression{NumberExpression(0), NumberExpression(1)}, IntValue(0), true},
 	{MultExpression{NumberExpression(2), NumberExpression(2)}, IntValue(4), true},
 
 	{MultExpression{NumberExpression(-1), BoolExpression(true)}, UndefinedValue(), true},

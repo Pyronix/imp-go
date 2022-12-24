@@ -5,6 +5,34 @@ import (
 	"testing"
 )
 
+type TestAndCase struct {
+	input1    Expression
+	input2    Expression
+	want      AndExpression
+	compliant bool
+}
+
+var testAndTests = []TestAndCase{
+	{BoolExpression(true), BoolExpression(true), AndExpression{BoolExpression(true), BoolExpression(true)}, true},
+	{BoolExpression(false), BoolExpression(true), AndExpression{BoolExpression(false), BoolExpression(true)}, true},
+
+	{BoolExpression(true), NumberExpression(1), AndExpression{BoolExpression(true), NumberExpression(1)}, true},
+	{NumberExpression(-1), NumberExpression(1), AndExpression{NumberExpression(-1), NumberExpression(1)}, true},
+
+	{BoolExpression(true), BoolExpression(true), AndExpression{BoolExpression(false), BoolExpression(true)}, false},
+
+	{BoolExpression(true), NumberExpression(1), AndExpression{BoolExpression(true), BoolExpression(true)}, false},
+	{NumberExpression(-1), BoolExpression(true), AndExpression{BoolExpression(false), BoolExpression(true)}, false},
+}
+
+func TestAnd(t *testing.T) {
+	for _, test := range testAndTests {
+		if got := And(test.input1, test.input2); got != test.want && test.compliant {
+			t.Errorf("got %q not equal to want %q", got.Pretty(), test.want.Pretty())
+		}
+	}
+}
+
 // TestAndPretty tests the Pretty function
 
 type TestAndPrettyCase struct {
