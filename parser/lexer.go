@@ -95,7 +95,7 @@ type Lexer struct {
 
 type LexerStateFunc func(*Lexer) LexerStateFunc
 
-func Lex(input string) (*Lexer, chan Token) {
+func NewLexer(input string) (*Lexer, chan Token) {
 	l := &Lexer{
 		input:    input,
 		start:    0,
@@ -108,6 +108,15 @@ func Lex(input string) (*Lexer, chan Token) {
 
 func (l *Lexer) NextToken() Token {
 	return <-l.tokens
+}
+
+func (l *Lexer) AllTokens() []Token {
+	tokens := []Token{}
+	for token := l.NextToken(); token.Type != EOF; {
+		tokens = append(tokens, token)
+	}
+
+	return tokens
 }
 
 func (l *Lexer) run() {

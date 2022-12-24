@@ -235,7 +235,7 @@ var nextTests = []nextTest{
 
 func TestNext(t *testing.T) {
 	for _, test := range nextTests {
-		lexer, _ := Lex(test.input)
+		lexer, _ := NewLexer(test.input)
 
 		for callNo, expected := range test.expectedTokens {
 			actual := lexer.NextToken()
