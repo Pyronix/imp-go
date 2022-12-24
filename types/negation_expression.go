@@ -12,13 +12,13 @@ func (e NegationExpression) Pretty() string {
 	var x string
 
 	x = "!"
-	x += e.Pretty()
+	x += e.Expression.Pretty()
 
 	return x
 }
 
 func (e NegationExpression) Eval(s ValueState) Value {
-	b := e.Eval(s)
+	b := e.Expression.Eval(s)
 	switch {
 	case b.ValueType == ValueBool:
 		return BoolValue(!b.BoolValue)
@@ -27,7 +27,7 @@ func (e NegationExpression) Eval(s ValueState) Value {
 }
 
 func (e NegationExpression) Infer(t TypeState) Type {
-	t1 := e.Infer(t)
+	t1 := e.Expression.Infer(t)
 	if t1 == TypeBool {
 		return TypeBool
 	}
