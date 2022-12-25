@@ -11,20 +11,17 @@ type WhileStatement struct {
 }
 
 func (whi WhileStatement) Eval(s ValueState) {
-	// TODO: WIP
-	v := whi.cond.Eval(s)
-
-	if v.ValueType == ValueBool {
-
-	} else {
-		fmt.Printf("while Eval fail")
+	for {
+		v := whi.cond.Eval(s)
+		if v.ValueType != ValueBool {
+			fmt.Printf("while Eval fail")
+			break
+		}
+		if !v.BoolValue {
+			break
+		}
+		whi.stmt.Eval(s)
 	}
-
-	for v.BoolValue {
-		v = whi.cond.Eval(s)
-
-	}
-
 }
 
 func (whi WhileStatement) Pretty(s ValueState) string {
@@ -40,7 +37,7 @@ func (whi WhileStatement) Pretty(s ValueState) string {
 
 func (whi WhileStatement) Check(t TypeState) bool {
 	ty := whi.cond.Infer(t)
-	if ty == TypeIllTyped {
+	if ty != TypeBool {
 		return false
 	}
 

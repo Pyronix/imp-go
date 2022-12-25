@@ -20,7 +20,6 @@ func (ite IfThenElseStatement) Eval(s ValueState) {
 		case !v.BoolValue:
 			ite.elseStmt.Eval(s)
 		}
-
 	} else {
 		fmt.Printf("if-then-else Eval fail")
 	}
@@ -41,7 +40,7 @@ func (ite IfThenElseStatement) Pretty(s ValueState) string {
 
 func (ite IfThenElseStatement) Check(t TypeState) bool {
 	ty := ite.cond.Infer(t)
-	if ty == TypeIllTyped {
+	if ty != TypeBool {
 		return false
 	}
 
