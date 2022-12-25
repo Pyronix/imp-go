@@ -7,7 +7,7 @@ type PrintStatement struct {
 }
 
 func (print PrintStatement) Pretty() string {
-	return print.Expression.Pretty()
+	return "print " + print.Expression.Pretty()
 }
 
 func (print PrintStatement) Eval(s ValueState) {
