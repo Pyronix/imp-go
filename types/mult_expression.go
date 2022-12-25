@@ -7,13 +7,10 @@ func Mult(x, y Expression) Expression {
 }
 
 func (e MultExpression) Pretty() string {
-
 	var x string
-	x = "("
-	x += e[0].Pretty()
+	x = e[0].Pretty()
 	x += "*"
 	x += e[1].Pretty()
-	x += ")"
 
 	return x
 }

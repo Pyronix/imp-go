@@ -23,12 +23,12 @@ var testBoolTests = []TestBoolCase{
 func TestBool(t *testing.T) {
 	for _, test := range testBoolTests {
 		if got := Bool(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want.Pretty())
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestPretty tests the Pretty function
+// TestBoolPretty tests the Pretty function
 
 type TestBoolPrettyCase struct {
 	input     BoolExpression
@@ -46,12 +46,12 @@ var testBoolPrettyTests = []TestBoolPrettyCase{
 func TestBoolPretty(t *testing.T) {
 	for _, test := range testBoolPrettyTests {
 		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestEval tests the Eval function
+// TestBoolEval tests the Eval function
 
 type TestBoolEvalCase struct {
 	input     BoolExpression
@@ -87,12 +87,12 @@ var testBoolInferTests = []TestBoolInferCase{
 	{BoolExpression(false), TypeInt, false},
 }
 
-// TestInfer tests the Infer function
+// TestBoolInfer tests the Infer function
 
 func TestBoolInfer(t *testing.T) {
 	for _, test := range testBoolInferTests {
 		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }

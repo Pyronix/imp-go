@@ -5,40 +5,38 @@ import (
 	"testing"
 )
 
-// TestNumber tests the Number function
+// TestNumber tests the Bool function
 
 type TestNumberCase struct {
 	input     int
-	want      NumberExpression
+	want      Expression
 	compliant bool
 }
 
 var testNumberTests = []TestNumberCase{
-	{-1, NumberExpression(-1), true},
-	{0, NumberExpression(0), true},
 	{1, NumberExpression(1), true},
-	{-1, NumberExpression(-10), false},
-	{0, NumberExpression(999), false},
-	{1, NumberExpression(10), false},
+
+	{0, BoolExpression(true), false},
+	{0, NumberExpression(1), false},
 }
 
 func TestNumber(t *testing.T) {
 	for _, test := range testNumberTests {
 		if got := Number(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestPretty tests the Pretty function
+// TestNumberPretty tests the Pretty function
 
-type TestPrettyCase struct {
+type TestNumberPrettyCase struct {
 	input     NumberExpression
 	want      string
 	compliant bool
 }
 
-var testPrettyTests = []TestPrettyCase{
+var testNumberPrettyTests = []TestNumberPrettyCase{
 	{NumberExpression(-1), "-1", true},
 	{NumberExpression(0), "0", true},
 	{NumberExpression(1), "1", true},
@@ -47,23 +45,23 @@ var testPrettyTests = []TestPrettyCase{
 	{NumberExpression(1), "10", false},
 }
 
-func TestPretty(t *testing.T) {
-	for _, test := range testPrettyTests {
+func TestNumberPretty(t *testing.T) {
+	for _, test := range testNumberPrettyTests {
 		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestEval tests the Eval function
+// TestNumberEval tests the Eval function
 
-type TestEvalCase struct {
+type TestNumberEvalCase struct {
 	input     NumberExpression
 	want      Value
 	compliant bool
 }
 
-var testEvalTests = []TestEvalCase{
+var testNumberEvalTests = []TestNumberEvalCase{
 	{NumberExpression(-1), IntValue(-1), true},
 	{NumberExpression(0), IntValue(0), true},
 	{NumberExpression(1), IntValue(1), true},
@@ -73,20 +71,20 @@ var testEvalTests = []TestEvalCase{
 }
 
 func TestEval(t *testing.T) {
-	for _, test := range testEvalTests {
+	for _, test := range testNumberEvalTests {
 		if got := test.input.Eval(ValueState{}); got != test.want && test.compliant {
 			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-type TestInferCase struct {
+type TestNumberInferCase struct {
 	input     NumberExpression
 	want      Type
 	compliant bool
 }
 
-var testInferTests = []TestInferCase{
+var testNumberInferTests = []TestNumberInferCase{
 	{NumberExpression(-1), TypeInt, true},
 	{NumberExpression(0), TypeInt, true},
 	{NumberExpression(1), TypeInt, true},
@@ -95,12 +93,12 @@ var testInferTests = []TestInferCase{
 	{NumberExpression(1), TypeBool, false},
 }
 
-// TestInfer tests the Infer function
+// TestNumberInfer tests the Infer function
 
-func TestInfer(t *testing.T) {
-	for _, test := range testInferTests {
+func TestNumberInfer(t *testing.T) {
+	for _, test := range testNumberInferTests {
 		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }

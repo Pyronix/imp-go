@@ -5,7 +5,8 @@ import (
 	"testing"
 )
 
-// TestNumber tests the Number function
+// TestPlus tests the Plus function
+
 type TestPlusCase struct {
 	input1    Expression
 	input2    Expression
@@ -14,34 +15,19 @@ type TestPlusCase struct {
 }
 
 var testPlusTests = []TestPlusCase{
-	{NumberExpression(-1), NumberExpression(-1), PlusExpression{NumberExpression(-1), NumberExpression(-1)}, true},
-	{NumberExpression(0), NumberExpression(0), PlusExpression{NumberExpression(0), NumberExpression(0)}, true},
 	{NumberExpression(1), NumberExpression(1), PlusExpression{NumberExpression(1), NumberExpression(1)}, true},
-
-	{BoolExpression(true), BoolExpression(true), PlusExpression{BoolExpression(true), BoolExpression(true)}, true},
-	{BoolExpression(true), BoolExpression(false), PlusExpression{BoolExpression(true), BoolExpression(false)}, true},
-	{BoolExpression(false), BoolExpression(true), PlusExpression{BoolExpression(false), BoolExpression(true)}, true},
-	{BoolExpression(false), BoolExpression(false), PlusExpression{BoolExpression(false), BoolExpression(false)}, true},
-
-	{NumberExpression(-1), NumberExpression(-1), PlusExpression{NumberExpression(1), NumberExpression(-1)}, false},
-	{NumberExpression(0), NumberExpression(0), PlusExpression{NumberExpression(-1), NumberExpression(0)}, false},
-	{NumberExpression(1), NumberExpression(1), PlusExpression{NumberExpression(1), NumberExpression(0)}, false},
-
-	{BoolExpression(true), BoolExpression(true), PlusExpression{BoolExpression(false), BoolExpression(true)}, false},
-	{BoolExpression(true), BoolExpression(false), PlusExpression{BoolExpression(false), BoolExpression(false)}, false},
-	{BoolExpression(false), BoolExpression(true), PlusExpression{BoolExpression(true), BoolExpression(true)}, false},
-	{BoolExpression(false), BoolExpression(false), PlusExpression{BoolExpression(true), BoolExpression(false)}, false},
+	{NumberExpression(1), NumberExpression(1), PlusExpression{NumberExpression(10), NumberExpression(1)}, false},
 }
 
-func TestPlusNumber(t *testing.T) {
+func TestPlus(t *testing.T) {
 	for _, test := range testPlusTests {
 		if got := Plus(test.input1, test.input2); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestPretty tests the Pretty function
+// TestPlusPretty tests the Pretty function
 
 type TestPlusPrettyCase struct {
 	input     PlusExpression
@@ -50,34 +36,24 @@ type TestPlusPrettyCase struct {
 }
 
 var testPlusPrettyTests = []TestPlusPrettyCase{
-	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, "(-1+-1)", true},
-	{PlusExpression{NumberExpression(0), NumberExpression(0)}, "(0+0)", true},
-	{PlusExpression{NumberExpression(1), NumberExpression(1)}, "(1+1)", true},
+	{PlusExpression{NumberExpression(1), NumberExpression(1)}, "1+1", true},
 
-	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "(true+true)", true},
-	{PlusExpression{BoolExpression(false), BoolExpression(true)}, "(false+true)", true},
-	{PlusExpression{BoolExpression(true), BoolExpression(false)}, "(true+false)", true},
-	{PlusExpression{BoolExpression(false), BoolExpression(false)}, "(false+false)", true},
+	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "true+true", true},
+	{PlusExpression{BoolExpression(false), BoolExpression(true)}, "false+true", true},
 
-	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, "(-1+1)", false},
-	{PlusExpression{NumberExpression(0), NumberExpression(0)}, "(-1+0)", false},
-	{PlusExpression{NumberExpression(1), NumberExpression(1)}, "(0+0)", false},
-
-	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "(false+true)", false},
-	{PlusExpression{BoolExpression(false), BoolExpression(true)}, "(false+false)", false},
-	{PlusExpression{BoolExpression(true), BoolExpression(false)}, "(true+true)", false},
-	{PlusExpression{BoolExpression(false), BoolExpression(false)}, "(true+true)", false},
+	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, "-1+1", false},
+	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "false+true", false},
 }
 
 func TestPlusPretty(t *testing.T) {
 	for _, test := range testPlusPrettyTests {
 		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
 
-// TestEval tests the Eval function
+// TestPlusEval tests the Eval function
 
 type TestPlusEvalCase struct {
 	input     PlusExpression
@@ -87,16 +63,12 @@ type TestPlusEvalCase struct {
 
 var testPlusEvalTests = []TestPlusEvalCase{
 	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, IntValue(-2), true},
-	{PlusExpression{NumberExpression(0), NumberExpression(0)}, IntValue(0), true},
-	{PlusExpression{NumberExpression(1), NumberExpression(1)}, IntValue(2), true},
 
 	{PlusExpression{NumberExpression(-1), BoolExpression(true)}, UndefinedValue(), true},
 	{PlusExpression{BoolExpression(true), NumberExpression(-1)}, UndefinedValue(), true},
 
 	{PlusExpression{BoolExpression(true), BoolExpression(true)}, UndefinedValue(), true},
 	{PlusExpression{BoolExpression(true), BoolExpression(false)}, UndefinedValue(), true},
-	{PlusExpression{BoolExpression(false), BoolExpression(true)}, UndefinedValue(), true},
-	{PlusExpression{BoolExpression(false), BoolExpression(false)}, UndefinedValue(), true},
 
 	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, IntValue(-1), false},
 	{PlusExpression{NumberExpression(0), NumberExpression(0)}, IntValue(2), false},
@@ -111,7 +83,7 @@ var testPlusEvalTests = []TestPlusEvalCase{
 	{PlusExpression{BoolExpression(true), NumberExpression(1)}, BoolValue(true), false},
 }
 
-func TestPrettyEval(t *testing.T) {
+func TestPlusEval(t *testing.T) {
 	for _, test := range testPlusEvalTests {
 		if got := test.input.Eval(ValueState{}); got != test.want && test.compliant {
 			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
@@ -127,13 +99,9 @@ type TestPlusInferCase struct {
 
 var testPlusInferTests = []TestPlusInferCase{
 	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, TypeInt, true},
-	{PlusExpression{NumberExpression(0), NumberExpression(0)}, TypeInt, true},
-	{PlusExpression{NumberExpression(1), NumberExpression(1)}, TypeInt, true},
 
 	{PlusExpression{BoolExpression(true), BoolExpression(true)}, TypeIllTyped, true},
 	{PlusExpression{BoolExpression(true), BoolExpression(false)}, TypeIllTyped, true},
-	{PlusExpression{BoolExpression(false), BoolExpression(true)}, TypeIllTyped, true},
-	{PlusExpression{BoolExpression(false), BoolExpression(false)}, TypeIllTyped, true},
 
 	{PlusExpression{BoolExpression(false), NumberExpression(-1)}, TypeIllTyped, true},
 	{PlusExpression{NumberExpression(-1), BoolExpression(true)}, TypeIllTyped, true},
@@ -148,12 +116,12 @@ var testPlusInferTests = []TestPlusInferCase{
 	{PlusExpression{BoolExpression(true), BoolExpression(true)}, TypeBool, false},
 }
 
-// TestInfer tests the Infer function
+// TestPlusInfer tests the Infer function
 
 func TestPlusInfer(t *testing.T) {
 	for _, test := range testPlusInferTests {
 		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", got, test.want)
+			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
