@@ -10,7 +10,7 @@ func (e OrExpression) Pretty() string {
 	var x string
 
 	x = e[0].Pretty()
-	x += "||"
+	x += " || "
 	x += e[1].Pretty()
 
 	return x

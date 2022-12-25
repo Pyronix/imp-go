@@ -51,23 +51,23 @@ type TestMultPrettyCase struct {
 }
 
 var testMultPrettyTests = []TestMultPrettyCase{
-	{MultExpression{NumberExpression(-1), NumberExpression(-1)}, "-1*-1", true},
-	{MultExpression{NumberExpression(0), NumberExpression(0)}, "0*0", true},
-	{MultExpression{NumberExpression(1), NumberExpression(1)}, "1*1", true},
+	{MultExpression{NumberExpression(-1), NumberExpression(-1)}, "-1 * -1", true},
+	{MultExpression{NumberExpression(0), NumberExpression(0)}, "0 * 0", true},
+	{MultExpression{NumberExpression(1), NumberExpression(1)}, "1 * 1", true},
 
-	{MultExpression{BoolExpression(true), BoolExpression(true)}, "true*true", true},
-	{MultExpression{BoolExpression(false), BoolExpression(true)}, "false*true", true},
-	{MultExpression{BoolExpression(true), BoolExpression(false)}, "true*false", true},
-	{MultExpression{BoolExpression(false), BoolExpression(false)}, "false*false", true},
+	{MultExpression{BoolExpression(true), BoolExpression(true)}, "true * true", true},
+	{MultExpression{BoolExpression(false), BoolExpression(true)}, "false * true", true},
+	{MultExpression{BoolExpression(true), BoolExpression(false)}, "true * false", true},
+	{MultExpression{BoolExpression(false), BoolExpression(false)}, "false * false", true},
 
-	{MultExpression{NumberExpression(-1), NumberExpression(-1)}, "-1*1", false},
-	{MultExpression{NumberExpression(0), NumberExpression(0)}, "-1*0", false},
-	{MultExpression{NumberExpression(1), NumberExpression(1)}, "0*0", false},
+	{MultExpression{NumberExpression(-1), NumberExpression(-1)}, "-1 * 1", false},
+	{MultExpression{NumberExpression(0), NumberExpression(0)}, "-1 * 0", false},
+	{MultExpression{NumberExpression(1), NumberExpression(1)}, "0 * 0", false},
 
-	{MultExpression{BoolExpression(true), BoolExpression(true)}, "false*true", false},
-	{MultExpression{BoolExpression(false), BoolExpression(true)}, "false*false", false},
-	{MultExpression{BoolExpression(true), BoolExpression(false)}, "true*true", false},
-	{MultExpression{BoolExpression(false), BoolExpression(false)}, "true*true", false},
+	{MultExpression{BoolExpression(true), BoolExpression(true)}, "false * true", false},
+	{MultExpression{BoolExpression(false), BoolExpression(true)}, "false * false", false},
+	{MultExpression{BoolExpression(true), BoolExpression(false)}, "true * true", false},
+	{MultExpression{BoolExpression(false), BoolExpression(false)}, "true * true", false},
 }
 
 func TestMultPretty(t *testing.T) {

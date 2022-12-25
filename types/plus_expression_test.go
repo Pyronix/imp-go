@@ -36,13 +36,13 @@ type TestPlusPrettyCase struct {
 }
 
 var testPlusPrettyTests = []TestPlusPrettyCase{
-	{PlusExpression{NumberExpression(1), NumberExpression(1)}, "1+1", true},
+	{PlusExpression{NumberExpression(1), NumberExpression(1)}, "1 + 1", true},
 
-	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "true+true", true},
-	{PlusExpression{BoolExpression(false), BoolExpression(true)}, "false+true", true},
+	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "true + true", true},
+	{PlusExpression{BoolExpression(false), BoolExpression(true)}, "false + true", true},
 
-	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, "-1+1", false},
-	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "false+true", false},
+	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, "-1 + 1", false},
+	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "false + true", false},
 }
 
 func TestPlusPretty(t *testing.T) {

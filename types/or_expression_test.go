@@ -42,17 +42,17 @@ type TestOrPrettyCase struct {
 }
 
 var testOrPrettyTests = []TestOrPrettyCase{
-	{OrExpression{NumberExpression(-1), NumberExpression(-1)}, "-1||-1", true},
+	{OrExpression{NumberExpression(-1), NumberExpression(-1)}, "-1 || -1", true},
 
-	{OrExpression{BoolExpression(true), BoolExpression(true)}, "true||true", true},
-	{OrExpression{BoolExpression(false), BoolExpression(true)}, "false||true", true},
-	{OrExpression{BoolExpression(true), BoolExpression(false)}, "true||false", true},
-	{OrExpression{BoolExpression(false), BoolExpression(false)}, "false||false", true},
+	{OrExpression{BoolExpression(true), BoolExpression(true)}, "true || true", true},
+	{OrExpression{BoolExpression(false), BoolExpression(true)}, "false || true", true},
+	{OrExpression{BoolExpression(true), BoolExpression(false)}, "true || false", true},
+	{OrExpression{BoolExpression(false), BoolExpression(false)}, "false || false", true},
 
-	{OrExpression{NumberExpression(-1), NumberExpression(-1)}, "-1||1", false},
+	{OrExpression{NumberExpression(-1), NumberExpression(-1)}, "-1 || 1", false},
 
-	{OrExpression{BoolExpression(true), BoolExpression(true)}, "false||true", false},
-	{OrExpression{BoolExpression(false), BoolExpression(true)}, "false||false", false},
+	{OrExpression{BoolExpression(true), BoolExpression(true)}, "false || true", false},
+	{OrExpression{BoolExpression(false), BoolExpression(true)}, "false || false", false},
 }
 
 func TestOrPretty(t *testing.T) {

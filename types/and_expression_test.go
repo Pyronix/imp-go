@@ -44,14 +44,14 @@ type TestAndPrettyCase struct {
 }
 
 var testAndPrettyTests = []TestAndPrettyCase{
-	{AndExpression{NumberExpression(-1), NumberExpression(-1)}, "-1&&-1", true},
+	{AndExpression{NumberExpression(-1), NumberExpression(-1)}, "-1 && -1", true},
 
-	{AndExpression{BoolExpression(true), BoolExpression(true)}, "true&&true", true},
-	{AndExpression{BoolExpression(false), BoolExpression(true)}, "false&&true", true},
-	{AndExpression{BoolExpression(true), BoolExpression(false)}, "true&&false", true},
-	{AndExpression{BoolExpression(false), BoolExpression(false)}, "false&&false", true},
+	{AndExpression{BoolExpression(true), BoolExpression(true)}, "true && true", true},
+	{AndExpression{BoolExpression(false), BoolExpression(true)}, "false && true", true},
+	{AndExpression{BoolExpression(true), BoolExpression(false)}, "true && false", true},
+	{AndExpression{BoolExpression(false), BoolExpression(false)}, "false && false", true},
 
-	{AndExpression{NumberExpression(-1), NumberExpression(-1)}, "-1&&1", false},
+	{AndExpression{NumberExpression(-1), NumberExpression(-1)}, "-1 && 1", false},
 
 	{AndExpression{BoolExpression(true), BoolExpression(true)}, "false&&true", false},
 	{AndExpression{BoolExpression(false), BoolExpression(true)}, "false&&false", false},
