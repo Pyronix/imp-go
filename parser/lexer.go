@@ -111,9 +111,11 @@ func (l *Lexer) NextToken() Token {
 }
 
 func (l *Lexer) AllTokens() []Token {
-	tokens := []Token{}
-	for token := l.NextToken(); token.Type != EOF; {
+	var tokens []Token
+	token := l.NextToken()
+	for token.Type != EOF {
 		tokens = append(tokens, token)
+		token = l.NextToken()
 	}
 
 	return tokens

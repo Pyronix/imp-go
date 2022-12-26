@@ -28,7 +28,7 @@ func ex3() {
 	run(ast)
 }
 
-func main() {
+func main2() {
 
 	fmt.Printf("\n")
 
