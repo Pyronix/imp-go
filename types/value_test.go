@@ -2,6 +2,7 @@ package types
 
 import (
 	. "imp/helper"
+	"reflect"
 	"testing"
 )
 
@@ -20,8 +21,8 @@ var testIntValueTests = []TestIntValueCase{
 
 func TestIntValue(t *testing.T) {
 	for _, test := range testIntValueTests {
-		if got := IntValue(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := IntValue(test.input); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }

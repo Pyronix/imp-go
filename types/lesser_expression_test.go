@@ -2,6 +2,7 @@ package types
 
 import (
 	. "imp/helper"
+	"reflect"
 	"testing"
 )
 
@@ -21,8 +22,8 @@ var testLesserTests = []TestLesserCase{
 
 func TestLesser(t *testing.T) {
 	for _, test := range testLesserTests {
-		if got := Lesser(test.input, test.input2); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := Lesser(test.input, test.input2); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -42,8 +43,8 @@ var testLesserPrettyTests = []TestLesserPrettyCase{
 
 func TestLesserPretty(t *testing.T) {
 	for _, test := range testLesserPrettyTests {
-		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Pretty(); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -58,14 +59,15 @@ type TestLesserEvalCase struct {
 
 var TestLesserEvalTests = []TestLesserEvalCase{
 	{LesserExpression{NumberExpression(1), NumberExpression(2)}, BoolValue(true), true},
-	{LesserExpression{NumberExpression(1), BoolExpression(true)}, UndefinedValue(), false},
+	{LesserExpression{NumberExpression(1), BoolExpression(true)}, UndefinedValue(), true},
+	{LesserExpression{NumberExpression(2), NumberExpression(1)}, BoolValue(false), true},
 	{LesserExpression{NumberExpression(1), NumberExpression(2)}, BoolValue(false), false},
 }
 
 func TestLesserEval(t *testing.T) {
 	for _, test := range TestLesserEvalTests {
-		if got := test.input.Eval(ValueState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Eval(ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -86,8 +88,8 @@ var TestLesserInferTests = []TestLesserInferCase{
 
 func TestLesserInfer(t *testing.T) {
 	for _, test := range TestLesserInferTests {
-		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Infer(TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }

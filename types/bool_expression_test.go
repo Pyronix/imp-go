@@ -2,6 +2,7 @@ package types
 
 import (
 	. "imp/helper"
+	"reflect"
 	"testing"
 )
 
@@ -22,8 +23,8 @@ var testBoolTests = []TestBoolCase{
 
 func TestBool(t *testing.T) {
 	for _, test := range testBoolTests {
-		if got := Bool(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := Bool(test.input); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -45,8 +46,8 @@ var testBoolPrettyTests = []TestBoolPrettyCase{
 
 func TestBoolPretty(t *testing.T) {
 	for _, test := range testBoolPrettyTests {
-		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Pretty(); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -68,8 +69,8 @@ var testBoolEvalTests = []TestBoolEvalCase{
 
 func TestBoolEval(t *testing.T) {
 	for _, test := range testBoolEvalTests {
-		if got := test.input.Eval(ValueState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Eval(ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -91,8 +92,8 @@ var testBoolInferTests = []TestBoolInferCase{
 
 func TestBoolInfer(t *testing.T) {
 	for _, test := range testBoolInferTests {
-		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Infer(TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }

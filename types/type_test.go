@@ -2,6 +2,7 @@ package types
 
 import (
 	. "imp/helper"
+	"reflect"
 	"testing"
 )
 
@@ -25,8 +26,8 @@ var testShowTypeTests = []TestShowTypeCase{
 
 func TestShowType(t *testing.T) {
 	for _, test := range testShowTypeTests {
-		if got := ShowType(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := ShowType(test.input); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }

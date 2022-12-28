@@ -2,6 +2,7 @@ package types
 
 import (
 	. "imp/helper"
+	"reflect"
 	"testing"
 )
 
@@ -20,8 +21,8 @@ var testNegationTests = []TestNegationCase{
 
 func TestNegation(t *testing.T) {
 	for _, test := range testNegationTests {
-		if got := Negation(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := Negation(test.input); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -41,8 +42,8 @@ var testNegationPrettyTests = []TestNegationPrettyCase{
 
 func TestNegationPretty(t *testing.T) {
 	for _, test := range testNegationPrettyTests {
-		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Pretty(); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -66,8 +67,8 @@ var testNegationEvalTests = []TestNegationEvalCase{
 
 func TestNegationEval(t *testing.T) {
 	for _, test := range testNegationEvalTests {
-		if got := test.input.Eval(ValueState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Eval(ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -88,8 +89,8 @@ var testNegationInferTests = []TestNegationInferCase{
 
 func TestNegationInfer(t *testing.T) {
 	for _, test := range testNegationInferTests {
-		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Infer(TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }

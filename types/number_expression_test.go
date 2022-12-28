@@ -2,6 +2,7 @@ package types
 
 import (
 	. "imp/helper"
+	"reflect"
 	"testing"
 )
 
@@ -22,8 +23,8 @@ var testNumberTests = []TestNumberCase{
 
 func TestNumber(t *testing.T) {
 	for _, test := range testNumberTests {
-		if got := Number(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := Number(test.input); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -47,8 +48,8 @@ var testNumberPrettyTests = []TestNumberPrettyCase{
 
 func TestNumberPretty(t *testing.T) {
 	for _, test := range testNumberPrettyTests {
-		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Pretty(); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -72,8 +73,8 @@ var testNumberEvalTests = []TestNumberEvalCase{
 
 func TestEval(t *testing.T) {
 	for _, test := range testNumberEvalTests {
-		if got := test.input.Eval(ValueState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Eval(ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -97,8 +98,8 @@ var testNumberInferTests = []TestNumberInferCase{
 
 func TestNumberInfer(t *testing.T) {
 	for _, test := range testNumberInferTests {
-		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Infer(TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }

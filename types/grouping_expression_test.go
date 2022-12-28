@@ -2,6 +2,7 @@ package types
 
 import (
 	. "imp/helper"
+	"reflect"
 	"testing"
 )
 
@@ -16,7 +17,6 @@ type TestGroupingCase struct {
 var testGroupingTests = []TestGroupingCase{
 	{BoolExpression(true), GroupingExpression{BoolExpression(true)}, true},
 	{NumberExpression(1), GroupingExpression{NumberExpression(1)}, true},
-	{AndExpression{BoolExpression(true), BoolExpression(true)}, GroupingExpression{AndExpression{BoolExpression(true), BoolExpression(true)}}, false},
 
 	{BoolExpression(true), GroupingExpression{NumberExpression(1)}, false},
 	{NumberExpression(1), GroupingExpression{BoolExpression(true)}, false},
@@ -24,8 +24,8 @@ var testGroupingTests = []TestGroupingCase{
 
 func TestGrouping(t *testing.T) {
 	for _, test := range testGroupingTests {
-		if got := Grouping(test.input); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := Grouping(test.input); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -40,15 +40,15 @@ type TestGroupingPrettyCase struct {
 
 var testGroupingPrettyTests = []TestGroupingPrettyCase{
 	{GroupingExpression{NumberExpression(-1)}, "(-1)", true},
-	{GroupingExpression{OrExpression{BoolExpression(true), BoolExpression(true)}}, "(true||true)", true},
+	{GroupingExpression{OrExpression{BoolExpression(true), BoolExpression(true)}}, "(true || true)", true},
 
 	{GroupingExpression{OrExpression{BoolExpression(true), BoolExpression(true)}}, "???", false},
 }
 
 func TestGroupingPretty(t *testing.T) {
 	for _, test := range testGroupingPrettyTests {
-		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Pretty(); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -64,7 +64,6 @@ type TestGroupingEvalCase struct {
 var testGroupingEvalTests = []TestGroupingEvalCase{
 	{GroupingExpression{NumberExpression(-1)}, IntValue(-1), true},
 	{GroupingExpression{OrExpression{BoolExpression(true), BoolExpression(true)}}, BoolValue(true), true},
-	{GroupingExpression{OrExpression{BoolExpression(false), BoolExpression(true)}}, BoolValue(true), true},
 	{GroupingExpression{OrExpression{BoolExpression(true), BoolExpression(false)}}, BoolValue(true), true},
 
 	{GroupingExpression{PlusExpression{BoolExpression(true), BoolExpression(true)}}, UndefinedValue(), true},
@@ -77,8 +76,8 @@ var testGroupingEvalTests = []TestGroupingEvalCase{
 
 func TestGroupingEval(t *testing.T) {
 	for _, test := range testGroupingEvalTests {
-		if got := test.input.Eval(ValueState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Eval(ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -103,8 +102,8 @@ var testGroupingInferTests = []TestGroupingInferCase{
 
 func TestGroupingInfer(t *testing.T) {
 	for _, test := range testGroupingInferTests {
-		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Infer(TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
