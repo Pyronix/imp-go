@@ -13,7 +13,8 @@ type AssignmentStatement struct {
 func (ass AssignmentStatement) Eval(s ValueState) {
 	v := ass.rhs.Eval(s)
 	x := (string)(ass.lhs)
-	if v.ValueType == s[x].ValueType {
+	val, ok := s[x]
+	if ok && v.ValueType == val.ValueType && v.ValueType != Undefined {
 		s[x] = v
 	} else {
 		fmt.Printf("Assignment Eval fail")
