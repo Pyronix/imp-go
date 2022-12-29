@@ -31,7 +31,7 @@ var testAndTests = []TestAndCase{
 func TestAnd(t *testing.T) {
 	for _, test := range testAndTests {
 		if got := And(test.input1, test.input2); (reflect.DeepEqual(got, test.want)) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -59,7 +59,7 @@ var testAndPrettyTests = []TestAndPrettyCase{
 func TestAndPretty(t *testing.T) {
 	for _, test := range testAndPrettyTests {
 		if got := test.input.Pretty(); (reflect.DeepEqual(got, test.want)) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -89,7 +89,7 @@ var testAndEvalTests = []TestAndEvalCase{
 func TestAndEval(t *testing.T) {
 	for _, test := range testAndEvalTests {
 		if got := test.input.Eval(ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
-			//t.Errorf("got %q not equal to want %q, test should be %t reflect %t", StructToJson(got), StructToJson(test.want), test.compliant, reflect.DeepEqual(got, test.want))
+			//t.Errorf("got %s not equal to want %s, test should be %t reflect %t", StructToJson(got), StructToJson(test.want), test.compliant, reflect.DeepEqual(got, test.want))
 		}
 	}
 }
@@ -118,7 +118,7 @@ var testAndInferTests = []TestAndInferCase{
 func TestAndInfer(t *testing.T) {
 	for _, test := range testAndInferTests {
 		if got := test.input.Infer(TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }

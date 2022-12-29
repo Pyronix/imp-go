@@ -25,7 +25,7 @@ var testVariablePrettyTests = []TestVariablePrettyCase{
 func TestVariablePretty(t *testing.T) {
 	for _, test := range testVariablePrettyTests {
 		if got := test.input.Pretty(); (reflect.DeepEqual(got, test.want)) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -57,7 +57,7 @@ var testVariableEvalTests = []TestVariableEvalCase{
 func TestVariableEval(t *testing.T) {
 	for _, test := range testVariableEvalTests {
 		if got := test.input.Eval(test.vs); (reflect.DeepEqual(got, test.want)) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -90,7 +90,7 @@ var testVariableInferTests = []TestVariableInferCase{
 func TestVariableInfer(t *testing.T) {
 	for _, test := range testVariableInferTests {
 		if got := test.input.Infer(test.vs); (reflect.DeepEqual(got, test.want)) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }

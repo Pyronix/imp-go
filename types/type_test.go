@@ -27,7 +27,7 @@ var testShowTypeTests = []TestShowTypeCase{
 func TestShowType(t *testing.T) {
 	for _, test := range testShowTypeTests {
 		if got := ShowType(test.input); (reflect.DeepEqual(got, test.want)) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }

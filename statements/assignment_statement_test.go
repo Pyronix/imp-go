@@ -26,7 +26,7 @@ func TestAssignment(t *testing.T) {
 	for _, test := range testAssignmentTests {
 		got := AssignmentStatement{test.lhs, test.rhs}
 		if reflect.DeepEqual(got, test.want) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", got, test.want, test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}
 	}
 }
@@ -54,7 +54,7 @@ func TestAssignmentEval(t *testing.T) {
 		test.input.Eval(vs)
 		got := StructToJson(vs)
 		if reflect.DeepEqual(got, StructToJson(test.want)) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", got, StructToJson(test.want), test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", got, StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -76,7 +76,7 @@ var testAssignmentPrettyTests = []TestAssignmentPrettyCase{
 func TestAssignmentPretty(t *testing.T) {
 	for _, test := range testAssignmentPrettyTests {
 		if got := test.input.Pretty(); reflect.DeepEqual(got, test.want) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", got, test.want, test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}
 	}
 }
@@ -100,7 +100,7 @@ func TestAssignmentInfer(t *testing.T) {
 		vs := TypeState{"temp": TypeInt}
 		got := StructToJson(vs)
 		if (reflect.DeepEqual(got, StructToJson(test.want)) && test.input2.Check(vs)) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", got, StructToJson(test.want), test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", got, StructToJson(test.want), test.compliant)
 		}
 	}
 }

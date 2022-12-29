@@ -26,7 +26,7 @@ func TestWhile(t *testing.T) {
 	for _, test := range testWhileTests {
 		got := WhileStatement{test.cond, test.stmt}
 		if reflect.DeepEqual(got, test.want) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", got, test.want, test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}
 	}
 }
@@ -49,8 +49,8 @@ func TestEvalWhile(t *testing.T) {
 	for _, test := range testWhileEvalTests {
 		vs := ValueState{"x": Value{ValueInt, 0, false}}
 		test.input.Eval(vs)
-		if got := StructToJson(vs); reflect.DeepEqual(got, StructToJson(test.want)) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+		if got := vs; reflect.DeepEqual(got, test.want) != test.compliant {
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -72,7 +72,7 @@ func TestWhilePretty(t *testing.T) {
 	for _, test := range testWhilePrettyTests {
 		vs := ValueState{"x": Value{ValueInt, 0, false}}
 		if got := test.input.Pretty(vs); reflect.DeepEqual(got, test.want) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", got, test.want, test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}
 	}
 }
@@ -94,7 +94,7 @@ func TestWhileInfer(t *testing.T) {
 	for _, test := range testWhileInferTests {
 		ts := TypeState{"x": TypeInt}
 		if got := StructToJson(ts); (reflect.DeepEqual(got, StructToJson(test.want)) && test.input.Check(ts)) != test.compliant {
-			t.Errorf("got %q not equal to want %q, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
