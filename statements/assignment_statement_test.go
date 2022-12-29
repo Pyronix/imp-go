@@ -48,13 +48,12 @@ var testAssignmentEvalTests = []TestAssigmentEvalCase{
 // Wie einen Fall mit valuestate {"temp": Value{undefined, 0, false}}
 func TestAssignmentEval(t *testing.T) {
 	for _, test := range testAssignmentEvalTests {
-		vs := ValueState{"temp": Value{ValueInt, 1, false}}
+		got := ValueState{"temp": Value{ValueInt, 1, false}}
 		//eval gibt nichts zurück
 		//aber printet "Assignment Eval fail" wenns nicht klappt
-		test.input.Eval(vs)
-		got := StructToJson(vs)
-		if reflect.DeepEqual(got, StructToJson(test.want)) != test.compliant {
-			t.Errorf("got %s not equal to want %s, test should be %t", got, StructToJson(test.want), test.compliant)
+		test.input.Eval(got)
+		if reflect.DeepEqual(got, test.want) != test.compliant {
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -97,10 +96,9 @@ var testAssignmentInferTests = []TestAssignmentInferCase{
 
 func TestAssignmentInfer(t *testing.T) {
 	for _, test := range testAssignmentInferTests {
-		vs := TypeState{"temp": TypeInt}
-		got := StructToJson(vs)
-		if (reflect.DeepEqual(got, StructToJson(test.want)) && test.input2.Check(vs)) != test.compliant {
-			t.Errorf("got %s not equal to want %s, test should be %t", got, StructToJson(test.want), test.compliant)
+		got := TypeState{"temp": TypeInt}
+		if (reflect.DeepEqual(got, test.want) && test.input2.Check(got)) != test.compliant {
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }

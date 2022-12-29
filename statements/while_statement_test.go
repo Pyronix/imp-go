@@ -47,9 +47,9 @@ var testWhileEvalTests = []TestWhileEvalCase{
 
 func TestEvalWhile(t *testing.T) {
 	for _, test := range testWhileEvalTests {
-		vs := ValueState{"x": Value{ValueInt, 0, false}}
-		test.input.Eval(vs)
-		if got := vs; reflect.DeepEqual(got, test.want) != test.compliant {
+		got := ValueState{"x": Value{ValueInt, 0, false}}
+		test.input.Eval(got)
+		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
@@ -88,12 +88,13 @@ type TestWhileInferCase struct {
 var testWhileInferTests = []TestWhileInferCase{
 	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, TypeState{"x": TypeInt}, true},
 	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, TypeState{"x": TypeBool}, false},
+	{WhileStatement{LesserExpression{Variable("y"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, TypeState{"x": TypeInt}, false},
 }
 
 func TestWhileInfer(t *testing.T) {
 	for _, test := range testWhileInferTests {
-		ts := TypeState{"x": TypeInt}
-		if got := StructToJson(ts); (reflect.DeepEqual(got, StructToJson(test.want)) && test.input.Check(ts)) != test.compliant {
+		got := TypeState{"x": TypeInt}
+		if (reflect.DeepEqual(got, test.want) && test.input.Check(got)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
