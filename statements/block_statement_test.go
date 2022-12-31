@@ -37,7 +37,6 @@ type TestBlockEvalCase struct {
 }
 
 var testBlockEvalTests = []TestBlockEvalCase{
-
 	{BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, ValueState{"x": Value{ValueInt, 1, false}}, true},
 	{BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, ValueState{"x": Value{ValueInt, 2, false}}, false},
 	{BlockStatement{DeclarationStatement{"x", BoolExpression(true)}}, ValueState{"x": Value{ValueInt, 0, true}}, false},
@@ -63,7 +62,6 @@ type TestBlockPrettyCase struct {
 }
 
 var testBlockPrettyTests = []TestBlockPrettyCase{
-
 	{BlockStatement{DeclarationStatement{"x", BoolExpression(true)}}, "{x := true}", true},
 	{BlockStatement{DeclarationStatement{"x", BoolExpression(true)}}, "x := true", false},
 }

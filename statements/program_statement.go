@@ -5,13 +5,13 @@ import . "imp/types"
 type ProgramStatement BlockStatement
 
 func (prog ProgramStatement) Pretty() string {
-	return prog.Pretty()
+	return prog.Statement.Pretty()
 }
 
 func (prog ProgramStatement) Eval(s ValueState) {
-	prog.Eval(s)
+	prog.Statement.Eval(s)
 }
 
 func (prog ProgramStatement) Check(t TypeState) bool {
-	return prog.Check(t)
+	return prog.Statement.Check(t)
 }

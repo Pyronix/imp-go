@@ -29,11 +29,11 @@ func (ite IfThenElseStatement) Pretty(s ValueState) string {
 	var x string
 	x = "if "
 	x += ite.cond.Pretty()
-	x += " { "
+	x += " {"
 	x += ite.thenStmt.Pretty()
-	x += " } else { "
+	x += "} else {"
 	x += ite.elseStmt.Pretty()
-	x += " }"
+	x += "}"
 
 	return x
 }
