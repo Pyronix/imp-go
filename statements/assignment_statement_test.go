@@ -45,7 +45,6 @@ var testAssignmentEvalTests = []TestAssigmentEvalCase{
 	{AssignmentStatement{"x", BoolExpression(true)}, ValueState{"x": Value{ValueInt, 0, true}}, false},
 }
 
-// Wie einen Fall mit valuestate {"x": Value{undefined, 0, false}}
 func TestAssignmentEval(t *testing.T) {
 	for _, test := range testAssignmentEvalTests {
 		got := ValueState{"x": Value{ValueInt, 1, false}}
@@ -80,9 +79,9 @@ func TestAssignmentPretty(t *testing.T) {
 	}
 }
 
-// TestAssignmentInfer tests the Infer function
+// TestAssignmentCheck tests the Check function
 
-type TestAssignmentInferCase struct {
+type TestAssignmentCheckCase struct {
 	input1    TypeState
 	input2    AssignmentStatement
 	want1     TypeState
@@ -90,7 +89,7 @@ type TestAssignmentInferCase struct {
 	compliant bool
 }
 
-var testAssignmentInferTests = []TestAssignmentInferCase{
+var testAssignmentCheckTests = []TestAssignmentCheckCase{
 	{TypeState{"x": TypeInt}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, true, true},
 	{TypeState{"x": TypeIllTyped}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, false, false},
 	{TypeState{"x": TypeIllTyped}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, true, false},
@@ -100,8 +99,8 @@ var testAssignmentInferTests = []TestAssignmentInferCase{
 	{TypeState{"x": TypeInt}, AssignmentStatement{"x", EqualityExpression{NumberExpression(1), BoolExpression(false)}}, TypeState{"x": TypeIllTyped}, false, false},
 }
 
-func TestAssignmentInfer(t *testing.T) {
-	for _, test := range testAssignmentInferTests {
+func TestAssignmentCheck(t *testing.T) {
+	for _, test := range testAssignmentCheckTests {
 		got := test.input1
 		if (reflect.DeepEqual(got, test.want1) && test.input2.Check(got) == test.want2) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want1), test.compliant)

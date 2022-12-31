@@ -77,22 +77,22 @@ func TestWhilePretty(t *testing.T) {
 	}
 }
 
-// TestWhileInfer tests the Infer function
+// TestWhileCheck tests the Check function
 
-type TestWhileInferCase struct {
+type TestWhileCheckCase struct {
 	input     WhileStatement
 	want      TypeState
 	compliant bool
 }
 
-var testWhileInferTests = []TestWhileInferCase{
+var testWhileCheckTests = []TestWhileCheckCase{
 	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, TypeState{"x": TypeInt}, true},
 	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, TypeState{"x": TypeBool}, false},
 	{WhileStatement{LesserExpression{Variable("y"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, TypeState{"x": TypeInt}, false},
 }
 
-func TestWhileInfer(t *testing.T) {
-	for _, test := range testWhileInferTests {
+func TestWhileCheck(t *testing.T) {
+	for _, test := range testWhileCheckTests {
 		got := TypeState{"x": TypeInt}
 		if (reflect.DeepEqual(got, test.want) && test.input.Check(got)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
