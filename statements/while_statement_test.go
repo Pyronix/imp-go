@@ -70,8 +70,7 @@ var testWhilePrettyTests = []TestWhilePrettyCase{
 
 func TestWhilePretty(t *testing.T) {
 	for _, test := range testWhilePrettyTests {
-		vs := ValueState{"x": Value{ValueInt, 0, false}}
-		if got := test.input.Pretty(vs); reflect.DeepEqual(got, test.want) != test.compliant {
+		if got := test.input.Pretty(); reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}
 	}

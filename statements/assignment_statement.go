@@ -10,6 +10,10 @@ type AssignmentStatement struct {
 	rhs Expression
 }
 
+func Assignment(x string, y Expression) Statement {
+	return AssignmentStatement{x, y}
+}
+
 func (ass AssignmentStatement) Eval(s ValueState) {
 	v := ass.rhs.Eval(s)
 	x := (string)(ass.lhs)

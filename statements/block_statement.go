@@ -6,6 +6,10 @@ type BlockStatement struct {
 	Statement
 }
 
+func Block(x Statement) Statement {
+	return BlockStatement{x}
+}
+
 func (block BlockStatement) Pretty() string {
 	return "{" + block.Statement.Pretty() + "}"
 }

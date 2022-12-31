@@ -4,6 +4,10 @@ import . "imp/types"
 
 type ProgramStatement BlockStatement
 
+func Program(x Statement) Statement {
+	return ProgramStatement{x}
+}
+
 func (prog ProgramStatement) Pretty() string {
 	return prog.Statement.Pretty()
 }

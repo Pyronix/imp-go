@@ -60,20 +60,19 @@ func TestEvalIfThenElse(t *testing.T) {
 
 type TestIfThenElsePrettyCase struct {
 	input     IfThenElseStatement
-	vs        ValueState
 	want      string
 	compliant bool
 }
 
 var testIfThenElsePrettyTests = []TestIfThenElsePrettyCase{
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(2)}}, ValueState{"x": Value{ValueInt, 0, false}}, "if 1 < 2 {x := 1} else {y := 2}", true},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(2)}}, ValueState{"x": Value{ValueInt, 1, false}}, "if 1 < 2 {x := 1} else {y := 2}", true},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(2)}}, ValueState{"x": Value{ValueInt, 2, false}}, "if 1 < 2 {x := 1} else {y := 2} ", false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(2)}}, "if 1 < 2 {x := 1} else {y := 2}", true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(2)}}, "if 1 < 2 {x := 1} else {y := 2}", true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(2)}}, "if 1 < 2 {x := 1} else {y := 2} ", false},
 }
 
 func TestIfThenElsePretty(t *testing.T) {
 	for _, test := range testIfThenElsePrettyTests {
-		if got := test.input.Pretty(test.vs); reflect.DeepEqual(got, test.want) != test.compliant {
+		if got := test.input.Pretty(); reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}
 	}

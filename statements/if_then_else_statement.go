@@ -11,6 +11,10 @@ type IfThenElseStatement struct {
 	elseStmt Statement
 }
 
+func Ite(x Expression, y Statement, z Statement) Statement {
+	return IfThenElseStatement{x, y, z}
+}
+
 func (ite IfThenElseStatement) Eval(s ValueState) {
 	v := ite.cond.Eval(s)
 	if v.ValueType == ValueBool {
@@ -25,7 +29,7 @@ func (ite IfThenElseStatement) Eval(s ValueState) {
 	}
 }
 
-func (ite IfThenElseStatement) Pretty(s ValueState) string {
+func (ite IfThenElseStatement) Pretty() string {
 	var x string
 	x = "if "
 	x += ite.cond.Pretty()

@@ -6,6 +6,10 @@ type PrintStatement struct {
 	Expression
 }
 
+func Print(x Expression) Statement {
+	return PrintStatement{x}
+}
+
 func (print PrintStatement) Pretty() string {
 	return "print " + print.Expression.Pretty()
 }

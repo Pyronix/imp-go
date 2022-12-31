@@ -10,6 +10,10 @@ type WhileStatement struct {
 	stmt Statement
 }
 
+func While(cond Expression, stmt Statement) Statement {
+	return WhileStatement{cond, stmt}
+}
+
 func (whi WhileStatement) Eval(s ValueState) {
 	for {
 		v := whi.cond.Eval(s)
@@ -24,7 +28,7 @@ func (whi WhileStatement) Eval(s ValueState) {
 	}
 }
 
-func (whi WhileStatement) Pretty(s ValueState) string {
+func (whi WhileStatement) Pretty() string {
 	var x string
 	x = "while "
 	x += whi.cond.Pretty()
