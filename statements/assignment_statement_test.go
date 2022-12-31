@@ -24,7 +24,7 @@ var testAssignmentTests = []TestAssignmentCase{
 
 func TestAssignment(t *testing.T) {
 	for _, test := range testAssignmentTests {
-		got := AssignmentStatement{test.lhs, test.rhs}
+		got := Assignment(test.lhs, test.rhs)
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}

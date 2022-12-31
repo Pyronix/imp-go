@@ -22,7 +22,7 @@ var testBlockTests = []TestBlockCase{
 
 func TestBlock(t *testing.T) {
 	for _, test := range testBlockTests {
-		got := BlockStatement{test.input}
+		got := Block(test.input)
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}

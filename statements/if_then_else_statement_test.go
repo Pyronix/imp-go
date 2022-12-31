@@ -24,7 +24,7 @@ var testIfThenElseTests = []TestIfThenElseCase{
 
 func TestIfThenElse(t *testing.T) {
 	for _, test := range testIfThenElseTests {
-		got := IfThenElseStatement{test.cond, test.thenStmt, test.elseStmt}
+		got := Ite(test.cond, test.thenStmt, test.elseStmt)
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}

@@ -25,7 +25,7 @@ var testDeclarationTests = []TestDeclarationCase{
 
 func TestDeclaration(t *testing.T) {
 	for _, test := range testDeclarationTests {
-		got := DeclarationStatement{test.lhs, test.rhs}
+		got := Declaration(test.lhs, test.rhs)
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}

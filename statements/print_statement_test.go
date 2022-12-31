@@ -24,7 +24,7 @@ var testPrintTests = []TestPrintCase{
 
 func TestPrint(t *testing.T) {
 	for _, test := range testPrintTests {
-		got := PrintStatement{test.input}
+		got := Print(test.input)
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}

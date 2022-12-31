@@ -24,7 +24,7 @@ var testWhileTests = []TestWhileCase{
 
 func TestWhile(t *testing.T) {
 	for _, test := range testWhileTests {
-		got := WhileStatement{test.cond, test.stmt}
+		got := While(test.cond, test.stmt)
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}

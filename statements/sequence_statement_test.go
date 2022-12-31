@@ -25,7 +25,7 @@ var testSequenceTests = []TestSequenceCase{
 
 func TestSequence(t *testing.T) {
 	for _, test := range testSequenceTests {
-		got := SequenceStatement{test.stmt1, test.stmt2}
+		got := Sequence(test.stmt1, test.stmt2)
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}
