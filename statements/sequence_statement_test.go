@@ -92,9 +92,11 @@ type TestSequenceCheckCase struct {
 
 var testSequenceCheckTests = []TestSequenceCheckCase{
 	{TypeState{"x": TypeInt}, Sequence{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeInt}, true, true},
-	{TypeState{"x": TypeInt}, Sequence{AssignmentStatement{"x", BoolExpression(true)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeIllTyped, "y": TypeInt}, false, true},
-	{TypeState{"x": TypeInt}, Sequence{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", BoolExpression(true)}}, TypeState{"x": TypeInt, "y": TypeIllTyped}, false, true},
-	{TypeState{"x": TypeInt}, Sequence{AssignmentStatement{"x", BoolExpression(true)}, DeclarationStatement{"y", BoolExpression(true)}}, TypeState{"x": TypeIllTyped, "y": TypeIllTyped}, false, true},
+	{TypeState{}, Sequence{DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeInt}, true, true},
+	{TypeState{"x": TypeInt}, Sequence{AssignmentStatement{"x", BoolExpression(true)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt}, false, true},
+	{TypeState{"x": TypeInt}, Sequence{AssignmentStatement{"x", BoolExpression(true)}, DeclarationStatement{"y", BoolExpression(true)}}, TypeState{"x": TypeInt}, false, true},
+	{TypeState{"x": TypeInt}, Sequence{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeInt}, false, false},
+	{TypeState{}, Sequence{DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeInt}, false, false},
 	{TypeState{"x": TypeInt}, Sequence{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeInt}, false, false},
 	{TypeState{"x": TypeInt}, Sequence{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeBool}, true, false},
 	{TypeState{"x": TypeInt}, Sequence{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeBool}, false, false},
@@ -102,8 +104,7 @@ var testSequenceCheckTests = []TestSequenceCheckCase{
 
 func TestSequenceCheck(t *testing.T) {
 	for _, test := range testSequenceCheckTests {
-		test.sequence.Check(test.input)
-		if (reflect.DeepEqual(test.input, test.want1) && test.sequence.Check(test.input) == test.want2) != test.compliant {
+		if ((test.sequence.Check(test.input) == test.want2) && reflect.DeepEqual(test.input, test.want1)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(test.input), StructToJson(test.want1), test.compliant)
 		}
 	}

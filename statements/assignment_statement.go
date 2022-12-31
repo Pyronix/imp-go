@@ -30,11 +30,9 @@ func (ass AssignmentStatement) Check(t TypeState) bool {
 	if ty == TypeIllTyped {
 		return false
 	}
-
 	x := (string)(ass.lhs)
 	if t[x] != ty {
 		return false
 	}
-
 	return true
 }

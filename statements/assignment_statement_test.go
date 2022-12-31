@@ -18,8 +18,8 @@ type TestAssignmentCase struct {
 
 var testAssignmentTests = []TestAssignmentCase{
 
-	{"temp1", NumberExpression(1), AssignmentStatement{"temp1", NumberExpression(1)}, true},
-	{"temp1", NumberExpression(1), AssignmentStatement{"temp1", BoolExpression(true)}, false},
+	{"x", NumberExpression(1), AssignmentStatement{"x", NumberExpression(1)}, true},
+	{"x", NumberExpression(1), AssignmentStatement{"x", BoolExpression(true)}, false},
 }
 
 func TestAssignment(t *testing.T) {
@@ -40,15 +40,15 @@ type TestAssigmentEvalCase struct {
 
 var testAssignmentEvalTests = []TestAssigmentEvalCase{
 
-	{AssignmentStatement{"temp", NumberExpression(1)}, ValueState{"temp": Value{ValueInt, 1, false}}, true},
-	{AssignmentStatement{"temp", NumberExpression(0)}, ValueState{"temp": Value{ValueInt, 1, false}}, false},
-	{AssignmentStatement{"temp", BoolExpression(true)}, ValueState{"temp": Value{ValueInt, 0, true}}, false},
+	{AssignmentStatement{"x", NumberExpression(1)}, ValueState{"x": Value{ValueInt, 1, false}}, true},
+	{AssignmentStatement{"x", NumberExpression(0)}, ValueState{"x": Value{ValueInt, 1, false}}, false},
+	{AssignmentStatement{"x", BoolExpression(true)}, ValueState{"x": Value{ValueInt, 0, true}}, false},
 }
 
-// Wie einen Fall mit valuestate {"temp": Value{undefined, 0, false}}
+// Wie einen Fall mit valuestate {"x": Value{undefined, 0, false}}
 func TestAssignmentEval(t *testing.T) {
 	for _, test := range testAssignmentEvalTests {
-		got := ValueState{"temp": Value{ValueInt, 1, false}}
+		got := ValueState{"x": Value{ValueInt, 1, false}}
 		//eval gibt nichts zurück
 		//aber printet "Assignment Eval fail" wenns nicht klappt
 		test.input.Eval(got)
@@ -68,8 +68,8 @@ type TestAssignmentPrettyCase struct {
 
 var testAssignmentPrettyTests = []TestAssignmentPrettyCase{
 
-	{AssignmentStatement{"temp", NumberExpression(1)}, "temp = 1", true},
-	{AssignmentStatement{"temp", BoolExpression(true)}, "temp = 1", false},
+	{AssignmentStatement{"x", NumberExpression(1)}, "x = 1", true},
+	{AssignmentStatement{"x", BoolExpression(true)}, "x = 1", false},
 }
 
 func TestAssignmentPretty(t *testing.T) {
@@ -83,22 +83,28 @@ func TestAssignmentPretty(t *testing.T) {
 // TestAssignmentInfer tests the Infer function
 
 type TestAssignmentInferCase struct {
+	input1    TypeState
 	input2    AssignmentStatement
-	want      TypeState
+	want1     TypeState
+	want2     bool
 	compliant bool
 }
 
 var testAssignmentInferTests = []TestAssignmentInferCase{
-	{AssignmentStatement{"temp", NumberExpression(1)}, TypeState{"temp": TypeInt}, true},
-	{AssignmentStatement{"temp", NumberExpression(1)}, TypeState{"temp": TypeIllTyped}, false},
-	{AssignmentStatement{"temp", NumberExpression(1)}, TypeState{"temp": TypeBool}, false},
+	{TypeState{"x": TypeInt}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, true, true},
+	{TypeState{"x": TypeIllTyped}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, false, false},
+	{TypeState{"x": TypeIllTyped}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, true, false},
+	{TypeState{"x": TypeInt}, AssignmentStatement{"x1", NumberExpression(1)}, TypeState{"x": TypeInt}, true, false},
+
+	{TypeState{"x": TypeIllTyped}, AssignmentStatement{"x", EqualityExpression{NumberExpression(1), BoolExpression(false)}}, TypeState{"x": TypeIllTyped}, false, true},
+	{TypeState{"x": TypeInt}, AssignmentStatement{"x", EqualityExpression{NumberExpression(1), BoolExpression(false)}}, TypeState{"x": TypeIllTyped}, false, false},
 }
 
 func TestAssignmentInfer(t *testing.T) {
 	for _, test := range testAssignmentInferTests {
-		got := TypeState{"temp": TypeInt}
-		if (reflect.DeepEqual(got, test.want) && test.input2.Check(got)) != test.compliant {
-			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+		got := test.input1
+		if (reflect.DeepEqual(got, test.want1) && test.input2.Check(got) == test.want2) != test.compliant {
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want1), test.compliant)
 		}
 	}
 }

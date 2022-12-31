@@ -14,8 +14,5 @@ func (stmt Sequence) Eval(s ValueState) {
 }
 
 func (stmt Sequence) Check(t TypeState) bool {
-	if !stmt[0].Check(t) {
-		return false
-	}
-	return stmt[1].Check(t)
+	return stmt[0].Check(t) && stmt[1].Check(t)
 }
