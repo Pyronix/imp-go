@@ -4,7 +4,7 @@ import . "imp/types"
 
 type ProgramStatement BlockStatement
 
-func Program(x Statement) Statement {
+func Program(x Statement) ProgramStatement {
 	return ProgramStatement{x}
 }
 

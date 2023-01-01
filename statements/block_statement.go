@@ -6,7 +6,7 @@ type BlockStatement struct {
 	Statement
 }
 
-func Block(x Statement) Statement {
+func Block(x Statement) BlockStatement {
 	return BlockStatement{x}
 }
 
