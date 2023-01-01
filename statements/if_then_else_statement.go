@@ -6,12 +6,12 @@ import (
 )
 
 type IfThenElseStatement struct {
-	cond     Expression
-	thenStmt Statement
-	elseStmt Statement
+	cond          Expression
+	thenBlockStmt BlockStatement
+	elseBlockStmt BlockStatement
 }
 
-func Ite(x Expression, y Statement, z Statement) Statement {
+func Ite(x Expression, y BlockStatement, z BlockStatement) Statement {
 	return IfThenElseStatement{x, y, z}
 }
 
@@ -20,9 +20,9 @@ func (ite IfThenElseStatement) Eval(s ValueState) {
 	if v.ValueType == ValueBool {
 		switch {
 		case v.BoolValue:
-			ite.thenStmt.Eval(s)
+			ite.thenBlockStmt.Eval(s)
 		case !v.BoolValue:
-			ite.elseStmt.Eval(s)
+			ite.elseBlockStmt.Eval(s)
 		}
 	} else {
 		fmt.Printf("if-then-else Eval fail")
@@ -33,11 +33,10 @@ func (ite IfThenElseStatement) Pretty() string {
 	var x string
 	x = "if "
 	x += ite.cond.Pretty()
-	x += " {"
-	x += ite.thenStmt.Pretty()
-	x += "} else {"
-	x += ite.elseStmt.Pretty()
-	x += "}"
+	x += " "
+	x += ite.thenBlockStmt.Pretty()
+	x += " else "
+	x += ite.elseBlockStmt.Pretty()
 
 	return x
 }
@@ -48,5 +47,5 @@ func (ite IfThenElseStatement) Check(t TypeState) bool {
 		return false
 	}
 
-	return ite.thenStmt.Check(t) && ite.elseStmt.Check(t)
+	return ite.thenBlockStmt.Check(t) && ite.elseBlockStmt.Check(t)
 }

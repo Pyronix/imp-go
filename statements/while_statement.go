@@ -6,12 +6,12 @@ import (
 )
 
 type WhileStatement struct {
-	cond Expression
-	stmt Statement
+	cond      Expression
+	blockStmt BlockStatement
 }
 
-func While(cond Expression, stmt Statement) Statement {
-	return WhileStatement{cond, stmt}
+func While(cond Expression, blockStmt BlockStatement) Statement {
+	return WhileStatement{cond, blockStmt}
 }
 
 func (whi WhileStatement) Eval(s ValueState) {
@@ -24,7 +24,7 @@ func (whi WhileStatement) Eval(s ValueState) {
 		if !v.BoolValue {
 			break
 		}
-		whi.stmt.Eval(s)
+		whi.blockStmt.Eval(s)
 	}
 }
 
@@ -32,9 +32,8 @@ func (whi WhileStatement) Pretty() string {
 	var x string
 	x = "while "
 	x += whi.cond.Pretty()
-	x += " { "
-	x += whi.stmt.Pretty()
-	x += " }"
+	x += " "
+	x += whi.blockStmt.Pretty()
 
 	return x
 }
@@ -45,5 +44,5 @@ func (whi WhileStatement) Check(t TypeState) bool {
 		return false
 	}
 
-	return whi.stmt.Check(t)
+	return whi.blockStmt.Check(t)
 }

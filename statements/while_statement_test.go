@@ -11,20 +11,20 @@ import (
 
 type TestWhileCase struct {
 	cond      Expression
-	stmt      Statement
+	bockStmt  BlockStatement
 	want      WhileStatement
 	compliant bool
 }
 
 var testWhileTests = []TestWhileCase{
-	{BoolExpression(true), AssignmentStatement{"x", NumberExpression(1)}, WhileStatement{BoolExpression(true), AssignmentStatement{"x", NumberExpression(1)}}, true},
-	{BoolExpression(true), AssignmentStatement{"x", NumberExpression(1)}, WhileStatement{BoolExpression(false), AssignmentStatement{"x", NumberExpression(1)}}, false},
-	{BoolExpression(true), AssignmentStatement{"x", NumberExpression(1)}, WhileStatement{BoolExpression(true), AssignmentStatement{"x", NumberExpression(2)}}, false},
+	{BoolExpression(true), BlockStatement{AssignmentStatement{"x", NumberExpression(1)}}, WhileStatement{BoolExpression(true), BlockStatement{AssignmentStatement{"x", NumberExpression(1)}}}, true},
+	{BoolExpression(true), BlockStatement{AssignmentStatement{"x", NumberExpression(1)}}, WhileStatement{BoolExpression(false), BlockStatement{AssignmentStatement{"x", NumberExpression(1)}}}, false},
+	{BoolExpression(true), BlockStatement{AssignmentStatement{"x", NumberExpression(1)}}, WhileStatement{BoolExpression(true), BlockStatement{AssignmentStatement{"x", NumberExpression(2)}}}, false},
 }
 
 func TestWhile(t *testing.T) {
 	for _, test := range testWhileTests {
-		got := While(test.cond, test.stmt)
+		got := While(test.cond, test.bockStmt)
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", got, test.want, test.compliant)
 		}
@@ -40,9 +40,9 @@ type TestWhileEvalCase struct {
 }
 
 var testWhileEvalTests = []TestWhileEvalCase{
-	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, ValueState{"x": Value{ValueInt, 10, false}}, true},
-	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, ValueState{"x": Value{ValueInt, 100, false}}, false},
-	{WhileStatement{NumberExpression(1), AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, ValueState{"x": Value{ValueInt, 100, false}}, false},
+	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, ValueState{"x": Value{ValueInt, 10, false}}, true},
+	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, ValueState{"x": Value{ValueInt, 100, false}}, false},
+	{WhileStatement{NumberExpression(1), BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, ValueState{"x": Value{ValueInt, 100, false}}, false},
 }
 
 func TestEvalWhile(t *testing.T) {
@@ -64,8 +64,8 @@ type TestWhilePrettyCase struct {
 }
 
 var testWhilePrettyTests = []TestWhilePrettyCase{
-	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, "while x < 10 { x = x + 1 }", true},
-	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, "while x < 10 { x = x + 2 }", false},
+	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, "while x < 10 {x = x + 1}", true},
+	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, "while x < 10 {x = x + 2}", false},
 }
 
 func TestWhilePretty(t *testing.T) {
@@ -85,9 +85,9 @@ type TestWhileCheckCase struct {
 }
 
 var testWhileCheckTests = []TestWhileCheckCase{
-	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, TypeState{"x": TypeInt}, true},
-	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, TypeState{"x": TypeBool}, false},
-	{WhileStatement{LesserExpression{Variable("y"), NumberExpression(10)}, AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}, TypeState{"x": TypeInt}, false},
+	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, TypeState{"x": TypeInt}, true},
+	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, TypeState{"x": TypeBool}, false},
+	{WhileStatement{LesserExpression{Variable("y"), NumberExpression(10)}, BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, TypeState{"x": TypeInt}, false},
 }
 
 func TestWhileCheck(t *testing.T) {
