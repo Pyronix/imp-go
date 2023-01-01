@@ -233,12 +233,12 @@ var nextTests = []nextTest{
 	}},
 }
 
-func TestNext(t *testing.T) {
+func TestLexer(t *testing.T) {
 	for _, test := range nextTests {
-		lexer, _ := NewLexer(test.input)
+		tape := TokenizeString(test.input)
 
 		for callNo, expected := range test.expectedTokens {
-			actual := lexer.NextToken()
+			actual := tape.Next()
 
 			if actual != expected {
 				t.Errorf("Testing %q on call %d: expected %s got %s", test.input, callNo, expected, actual)

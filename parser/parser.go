@@ -8,49 +8,19 @@ import (
 import . "imp/types"
 
 type Parser struct {
-	tokens   []Token
+	tokens   *Tape[Token]
 	position int
 }
 
 func NewParser(input string) *Parser {
-	lexer, _ := NewLexer(input)
-
 	return &Parser{
-		tokens:   lexer.AllTokens(),
+		tokens:   TokenizeString(input),
 		position: 0,
 	}
 }
 
-func (p *Parser) current() Token {
-	return p.tokens[p.position]
-}
-
-func (p *Parser) next() Token {
-	if p.position >= len(p.tokens) {
-		return p.current()
-	}
-
-	next := p.current()
-	p.position += 1
-	if p.position >= len(p.tokens) {
-		p.position = len(p.tokens) - 1
-	}
-
-	return next
-}
-
-func (p *Parser) rewind() Token {
-	if p.position == 0 {
-		return p.current()
-	}
-
-	p.position -= 1
-
-	return p.current()
-}
-
-func (p *Parser) peek() Token {
-	return p.current()
+func (p *Parser) ParseProgram() (Expression, error) {
+	return p.ParseExpression()
 }
 
 func (p *Parser) ParseExpression() (Expression, error) {
@@ -68,8 +38,8 @@ func (p *Parser) parseBinaryOperation(operatorToken TokenType, higherPrecedenceP
 
 	terms := []Expression{sub}
 
-	for p.peek().Type == operatorToken {
-		p.next()
+	for p.tokens.Peek().Type == operatorToken {
+		p.tokens.Next()
 		sub, err := higherPrecedenceParser()
 		if err != nil {
 			return nil, err
@@ -124,8 +94,8 @@ func (p *Parser) parseFactor() (Expression, error) {
 }
 
 func (p *Parser) parseUnary() (Expression, error) {
-	if p.peek().Type == NOT {
-		p.next()
+	if p.tokens.Peek().Type == NOT {
+		p.tokens.Next()
 		unary, err := p.parseUnary()
 		if err != nil {
 			return nil, err
@@ -138,7 +108,7 @@ func (p *Parser) parseUnary() (Expression, error) {
 }
 
 func (p *Parser) parsePrimary() (Expression, error) {
-	switch next := p.next(); {
+	switch next := p.tokens.Next(); {
 	case next.Type == INT:
 		intVar, err := strconv.Atoi(next.Value)
 		if err != nil {
@@ -160,7 +130,7 @@ func (p *Parser) parsePrimary() (Expression, error) {
 			return nil, err
 		}
 
-		after := p.next()
+		after := p.tokens.Next()
 
 		if after.Type != CLOSE {
 			return nil, fmt.Errorf("expected closing ), got: %q", after.Value)
@@ -170,8 +140,8 @@ func (p *Parser) parsePrimary() (Expression, error) {
 	case next.Type == IDENTIFIER:
 		return Variable(next.Value), nil
 	default:
-		p.rewind()
+		p.tokens.Rewind()
 	}
 
-	return nil, fmt.Errorf("exptected an primary expression, got %q", p.peek())
+	return nil, fmt.Errorf("exptected an primary expression, got %q", p.tokens.Peek())
 }
