@@ -3,25 +3,60 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"imp/helper"
 	"imp/parser"
 	"imp/types"
 	"os"
 )
 
 func main() {
+	repl()
+}
+
+func repl() {
 	reader := bufio.NewReader(os.Stdin)
-	text, _ := reader.ReadString('\n')
-	//text := "1+2"
 
-	p := parser.NewParser(text)
-	exp, err := p.ParseExpression()
+	typeScope := types.TypeState{}
+	valueScope := types.ValueState{}
 
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("Pretty: " + exp.Pretty())
-		fmt.Println("Inferred Type: " + helper.StructToJson(exp.Infer(types.TypeState{})))
-		fmt.Println("Evaluated Value: " + helper.StructToJson(exp.Eval(types.ValueState{})))
+	for {
+		fmt.Print("> ")
+		text, err := reader.ReadString('\n')
+		if err != nil {
+			panic(err)
+		}
+		fmt.Print(" => ")
+
+		program, err := parse(text)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		_, err = typeCheck(program, typeScope)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		v := program.Eval(valueScope)
+		fmt.Println(types.ShowVal(v))
 	}
+}
+
+func parse(input string) (types.Expression, error) {
+	return parser.NewParser(input).ParseExpression()
+}
+
+func typeCheck(program types.Expression, scope types.TypeState) (bool, error) {
+	t := program.Infer(scope)
+
+	if t == types.TypeIllTyped {
+		return false, fmt.Errorf("statement is ill typed")
+	}
+
+	return true, nil
+}
+
+func evaluate(program types.Expression, scope types.ValueState) types.Value {
+	return program.Eval(scope)
 }
