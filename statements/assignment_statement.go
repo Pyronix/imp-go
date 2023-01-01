@@ -1,7 +1,6 @@
 package statements
 
 import (
-	"fmt"
 	. "imp/types"
 )
 
@@ -15,14 +14,7 @@ func Assignment(x string, y Expression) Statement {
 }
 
 func (ass AssignmentStatement) Eval(s ValueState) {
-	v := ass.rhs.Eval(s)
-	x := (string)(ass.lhs)
-	val, ok := s[x]
-	if ok && v.ValueType == val.ValueType && v.ValueType != Undefined {
-		s[x] = v
-	} else {
-		fmt.Printf("Assignment Eval fail")
-	}
+	s.Assign(ass.lhs, ass.rhs.Eval(s))
 }
 
 func (ass AssignmentStatement) Pretty() string {
@@ -34,9 +26,12 @@ func (ass AssignmentStatement) Check(t TypeState) bool {
 	if ty == TypeIllTyped {
 		return false
 	}
-	x := (string)(ass.lhs)
-	if t[x] != ty {
+	typ, _ := t.LookUpTypeByVariableName(ass.lhs)
+
+	if typ != ty {
 		return false
 	}
+
+	t.Assign(ass.lhs, ty)
 	return true
 }

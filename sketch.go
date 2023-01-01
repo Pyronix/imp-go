@@ -4,8 +4,8 @@ import "fmt"
 import . "imp/types"
 
 func run(e Expression) {
-	s := make(map[string]Value)
-	t := make(map[string]Type)
+	var s []map[string]Value
+	var t []map[string]Type
 	fmt.Printf("\n ******* ")
 	fmt.Printf("\n %s", e.Pretty())
 	fmt.Printf("\n %s", ShowVal(e.Eval(s)))

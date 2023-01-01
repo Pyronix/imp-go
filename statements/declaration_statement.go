@@ -14,9 +14,7 @@ func Declaration(lhs string, rhs Expression) DeclarationStatement {
 // Maps are represented via points.
 // Hence, maps are passed by "reference" and the update is visible for the caller as well.
 func (decl DeclarationStatement) Eval(s ValueState) {
-	v := decl.rhs.Eval(s)
-	x := (string)(decl.lhs)
-	s[x] = v
+	s.Declare(decl.lhs, decl.rhs.Eval(s))
 }
 
 func (decl DeclarationStatement) Pretty() string {
@@ -29,7 +27,6 @@ func (decl DeclarationStatement) Check(t TypeState) bool {
 		return false
 	}
 
-	x := (string)(decl.lhs)
-	t[x] = ty
+	t.Declare(decl.lhs, ty)
 	return true
 }

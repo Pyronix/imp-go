@@ -15,6 +15,7 @@ func (e MultExpression) Pretty() string {
 	return x
 }
 
+// TODO: Müssen beide Expressions evaluiert werden? Auch an anderen Stellen prüfen.
 func (e MultExpression) Eval(s ValueState) Value {
 	n1 := e[0].Eval(s)
 	n2 := e[1].Eval(s)

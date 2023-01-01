@@ -1,9 +1,11 @@
 package statements
 
-import . "imp/types"
+import (
+	. "imp/types"
+)
 
 type BlockStatement struct {
-	Statement
+	stmt Statement
 }
 
 func Block(x Statement) BlockStatement {
@@ -11,13 +13,18 @@ func Block(x Statement) BlockStatement {
 }
 
 func (block BlockStatement) Pretty() string {
-	return "{" + block.Statement.Pretty() + "}"
+	return "{" + block.stmt.Pretty() + "}"
 }
 
 func (block BlockStatement) Eval(s ValueState) {
-	block.Statement.Eval(s)
+	PushValueScope(&s)
+	block.stmt.Eval(s)
+	PopValueScope(&s)
 }
 
 func (block BlockStatement) Check(t TypeState) bool {
-	return block.Statement.Check(t)
+	PushTypeScope(&t)
+	checkOk := block.stmt.Check(t)
+	PopTypeScope(&t)
+	return checkOk
 }
