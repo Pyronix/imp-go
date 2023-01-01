@@ -10,14 +10,14 @@ import (
 // TestProgram tests the Program function
 
 type TestProgramCase struct {
-	input     Statement
+	input     BlockStatement
 	want      ProgramStatement
 	compliant bool
 }
 
 var testProgramTests = []TestProgramCase{
-	{DeclarationStatement{"x", NumberExpression(1)}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, true},
-	{DeclarationStatement{"x", NumberExpression(1)}, ProgramStatement{DeclarationStatement{"x", NumberExpression(2)}}, false},
+	{Block(DeclarationStatement{"x", NumberExpression(1)}), ProgramStatement{Block(DeclarationStatement{"x", NumberExpression(1)})}, true},
+	{Block(DeclarationStatement{"x", NumberExpression(1)}), ProgramStatement{Block(DeclarationStatement{"x", NumberExpression(2)})}, false},
 }
 
 func TestProgram(t *testing.T) {
