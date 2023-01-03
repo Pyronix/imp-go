@@ -41,18 +41,18 @@ type TestDeclarationEvalCase struct {
 
 var testDeclarationEvalTests = []TestDeclarationEvalCase{
 
-	{DeclarationStatement{"x", NumberExpression(1)}, ValueState{"x": Value{ValueInt, 1, false}}, true},
-	{DeclarationStatement{"x", BoolExpression(true)}, ValueState{"x": Value{ValueBool, 0, true}}, true},
-	{DeclarationStatement{"x", PlusExpression{NumberExpression(1), BoolExpression(true)}}, ValueState{"x": Value{Undefined, 0, false}}, true},
-	{DeclarationStatement{"x", PlusExpression{NumberExpression(1), BoolExpression(true)}}, ValueState{"x": Value{ValueInt, 0, false}}, false},
-	{DeclarationStatement{"x", NumberExpression(0)}, ValueState{"x": Value{ValueInt, 1, false}}, false},
-	{DeclarationStatement{"x", BoolExpression(true)}, ValueState{"x": Value{ValueInt, 0, true}}, false},
+	{DeclarationStatement{"x", NumberExpression(1)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, true},
+	{DeclarationStatement{"x", BoolExpression(true)}, ValueState{map[string]Value{"x": {ValueBool, 0, true}}}, true},
+	{DeclarationStatement{"x", PlusExpression{NumberExpression(1), BoolExpression(true)}}, ValueState{map[string]Value{"x": {Undefined, 0, false}}}, true},
+	{DeclarationStatement{"x", PlusExpression{NumberExpression(1), BoolExpression(true)}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, false},
+	{DeclarationStatement{"x", NumberExpression(0)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, false},
+	{DeclarationStatement{"x", BoolExpression(true)}, ValueState{map[string]Value{"x": {ValueInt, 0, true}}}, false},
 }
 
 func TestDeclarationEval(t *testing.T) {
 	for _, test := range testDeclarationEvalTests {
-		got := ValueState{"x": Value{ValueInt, 1, false}}
-		test.input.Eval(got)
+		got := ValueState{map[string]Value{"x": {ValueInt, 1, false}}}
+		test.input.Eval(&got)
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
@@ -93,19 +93,19 @@ type TestDeclarationCheckCase struct {
 }
 
 var testDeclarationCheckTests = []TestDeclarationCheckCase{
-	{TypeState{"x": TypeInt}, DeclarationStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, true, true},
-	{TypeState{"x": TypeIllTyped}, DeclarationStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, true, true},
-	{TypeState{"x": TypeIllTyped}, DeclarationStatement{"x", NumberExpression(1)}, TypeState{"x": TypeIllTyped}, false, true},
-	{TypeState{"x": TypeInt}, DeclarationStatement{"x", PlusExpression{NumberExpression(1), BoolExpression(true)}}, TypeState{"x": TypeInt}, true, true},
-	{TypeState{"x": TypeInt}, DeclarationStatement{"y", NumberExpression(1)}, TypeState{"x": TypeInt, "y": TypeInt}, true, true},
-	{TypeState{"x": TypeInt}, DeclarationStatement{"x", NumberExpression(1)}, TypeState{"x": TypeBool}, true, false},
-	{TypeState{"x": TypeInt}, DeclarationStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, false, false},
+	{TypeState{map[string]Type{"x": TypeInt}}, DeclarationStatement{"x", NumberExpression(1)}, TypeState{map[string]Type{"x": TypeInt}}, true, true},
+	{TypeState{map[string]Type{"x": TypeIllTyped}}, DeclarationStatement{"x", NumberExpression(1)}, TypeState{map[string]Type{"x": TypeInt}}, true, true},
+	{TypeState{map[string]Type{"x": TypeIllTyped}}, DeclarationStatement{"x", NumberExpression(1)}, TypeState{map[string]Type{"x": TypeIllTyped}}, false, true},
+	{TypeState{map[string]Type{"x": TypeInt}}, DeclarationStatement{"x", PlusExpression{NumberExpression(1), BoolExpression(true)}}, TypeState{map[string]Type{"x": TypeInt}}, true, true},
+	{TypeState{map[string]Type{"x": TypeInt}}, DeclarationStatement{"y", NumberExpression(1)}, TypeState{map[string]Type{"x": TypeInt, "y": TypeInt}}, true, true},
+	{TypeState{map[string]Type{"x": TypeInt}}, DeclarationStatement{"x", NumberExpression(1)}, TypeState{map[string]Type{"x": TypeBool}}, true, false},
+	{TypeState{map[string]Type{"x": TypeInt}}, DeclarationStatement{"x", NumberExpression(1)}, TypeState{map[string]Type{"x": TypeInt}}, false, false},
 }
 
 func TestDeclarationCheck(t *testing.T) {
 	for _, test := range testDeclarationCheckTests {
 		got := test.input1
-		if (test.input2.Check(got) == test.want2) && reflect.DeepEqual(got, test.want1) != test.compliant {
+		if (test.input2.Check(&got) == test.want2) && reflect.DeepEqual(got, test.want1) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want1), test.compliant)
 		}
 	}

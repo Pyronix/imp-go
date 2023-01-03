@@ -41,16 +41,16 @@ type TestIfThenElseEvalCase struct {
 }
 
 var testIfThenElseEvalTests = []TestIfThenElseEvalCase{
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{"x": Value{ValueInt, 0, false}}, ValueState{"x": Value{ValueInt, 1, false}}, true},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{"x": Value{ValueInt, 1, false}}, ValueState{"x": Value{ValueInt, 2, false}}, false},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), BoolExpression(true)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{"x": Value{ValueInt, 1, false}}, ValueState{"x": Value{ValueInt, 2, false}}, false},
-	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{"x": Value{ValueInt, 0, false}}, ValueState{"x": Value{ValueInt, 0, false}, "y": Value{ValueInt, 2, false}}, true},
-	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{"x": Value{ValueInt, 1, false}}, ValueState{"x": Value{ValueInt, 0, false}, "y": Value{ValueInt, 2, false}}, false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}}}, false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), BoolExpression(true)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}}}, false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}, "y": {ValueInt, 2, false}}}, true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}, "y": {ValueInt, 2, false}}}, false},
 }
 
 func TestEvalIfThenElse(t *testing.T) {
 	for _, test := range testIfThenElseEvalTests {
-		test.input.Eval(test.vs)
+		test.input.Eval(&test.vs)
 		if reflect.DeepEqual(test.vs, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(test.vs), StructToJson(test.want), test.compliant)
 		}
@@ -90,16 +90,16 @@ type TestIfThenElseCheckCase struct {
 }
 
 var testIfThenElseCheckTests = []TestIfThenElseCheckCase{
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{"x": TypeBool, "y": TypeBool}, TypeState{"x": TypeInt, "y": TypeBool}, true, true},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{"x": TypeInt, "y": TypeInt}, TypeState{"x": TypeInt, "y": TypeInt}, true, true},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{"x": TypeInt, "y": TypeBool}, TypeState{"x": TypeInt, "y": TypeBool}, true, false},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{"x": TypeBool, "y": TypeInt}, TypeState{"x": TypeBool, "y": TypeInt}, true, false},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), BoolExpression(true)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{"x": TypeBool, "y": TypeInt}, TypeState{"x": TypeBool, "y": TypeInt}, true, false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeBool}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeBool}}, true, true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeInt}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeInt}}, true, true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeBool}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeBool}}, true, false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeInt}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeInt}}, true, false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), BoolExpression(true)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeInt}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeInt}}, true, false},
 }
 
 func TestIfThenElseCheck(t *testing.T) {
 	for _, test := range testIfThenElseCheckTests {
-		if (test.input.Check(test.ts) == test.want2 && reflect.DeepEqual(test.ts, test.want1)) != test.compliant {
+		if (test.input.Check(&test.ts) == test.want2 && reflect.DeepEqual(test.ts, test.want1)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(test.ts), StructToJson(test.want1), test.compliant)
 		}
 	}

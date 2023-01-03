@@ -40,17 +40,15 @@ type TestAssigmentEvalCase struct {
 
 var testAssignmentEvalTests = []TestAssigmentEvalCase{
 
-	{AssignmentStatement{"x", NumberExpression(1)}, ValueState{"x": Value{ValueInt, 1, false}}, true},
-	{AssignmentStatement{"x", NumberExpression(0)}, ValueState{"x": Value{ValueInt, 1, false}}, false},
-	{AssignmentStatement{"x", BoolExpression(true)}, ValueState{"x": Value{ValueInt, 0, true}}, false},
+	{AssignmentStatement{"x", NumberExpression(1)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, true},
+	{AssignmentStatement{"x", NumberExpression(0)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, false},
+	{AssignmentStatement{"x", BoolExpression(true)}, ValueState{map[string]Value{"x": {ValueInt, 0, true}}}, false},
 }
 
 func TestAssignmentEval(t *testing.T) {
 	for _, test := range testAssignmentEvalTests {
-		got := ValueState{"x": Value{ValueInt, 1, false}}
-		//eval gibt nichts zurück
-		//aber printet "Assignment Eval fail" wenns nicht klappt
-		test.input.Eval(got)
+		got := ValueState{map[string]Value{"x": {ValueInt, 1, false}}}
+		test.input.Eval(&got)
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
@@ -90,19 +88,19 @@ type TestAssignmentCheckCase struct {
 }
 
 var testAssignmentCheckTests = []TestAssignmentCheckCase{
-	{TypeState{"x": TypeInt}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, true, true},
-	{TypeState{"x": TypeIllTyped}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, false, false},
-	{TypeState{"x": TypeIllTyped}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{"x": TypeInt}, true, false},
-	{TypeState{"x": TypeInt}, AssignmentStatement{"x1", NumberExpression(1)}, TypeState{"x": TypeInt}, true, false},
+	{TypeState{map[string]Type{"x": TypeInt}}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{map[string]Type{"x": TypeInt}}, true, true},
+	{TypeState{map[string]Type{"x": TypeIllTyped}}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{map[string]Type{"x": TypeInt}}, false, false},
+	{TypeState{map[string]Type{"x": TypeIllTyped}}, AssignmentStatement{"x", NumberExpression(1)}, TypeState{map[string]Type{"x": TypeInt}}, true, false},
+	{TypeState{map[string]Type{"x": TypeInt}}, AssignmentStatement{"x1", NumberExpression(1)}, TypeState{map[string]Type{"x": TypeInt}}, true, false},
 
-	{TypeState{"x": TypeIllTyped}, AssignmentStatement{"x", EqualityExpression{NumberExpression(1), BoolExpression(false)}}, TypeState{"x": TypeIllTyped}, false, true},
-	{TypeState{"x": TypeInt}, AssignmentStatement{"x", EqualityExpression{NumberExpression(1), BoolExpression(false)}}, TypeState{"x": TypeIllTyped}, false, false},
+	{TypeState{map[string]Type{"x": TypeIllTyped}}, AssignmentStatement{"x", EqualityExpression{NumberExpression(1), BoolExpression(false)}}, TypeState{map[string]Type{"x": TypeIllTyped}}, false, true},
+	{TypeState{map[string]Type{"x": TypeInt}}, AssignmentStatement{"x", EqualityExpression{NumberExpression(1), BoolExpression(false)}}, TypeState{map[string]Type{"x": TypeIllTyped}}, false, false},
 }
 
 func TestAssignmentCheck(t *testing.T) {
 	for _, test := range testAssignmentCheckTests {
 		got := test.input1
-		if (reflect.DeepEqual(got, test.want1) && test.input2.Check(got) == test.want2) != test.compliant {
+		if (reflect.DeepEqual(got, test.want1) && test.input2.Check(&got) == test.want2) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want1), test.compliant)
 		}
 	}

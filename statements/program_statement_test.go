@@ -85,9 +85,9 @@ type TestProgramCheckCase struct {
 }
 
 var testProgramCheckTests = []TestProgramCheckCase{
-	{TypeState{map[string]Value{"x": TypeInt}}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{map[string]Value{"x": TypeInt}}, true, true},
-	{TypeState{map[string]Value{"x": TypeInt}}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{map[string]Value{"x": TypeInt}}, false, false},
-	{TypeState{map[string]Value{"x": TypeInt}}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{map[string]Value{"x": TypeBool}}, true, false},
+	{TypeState{map[string]Type{"x": TypeInt}}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{map[string]Type{"x": TypeInt}}, true, true},
+	{TypeState{map[string]Type{"x": TypeInt}}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{map[string]Type{"x": TypeInt}}, false, false},
+	{TypeState{map[string]Type{"x": TypeInt}}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{map[string]Type{"x": TypeBool}}, true, false},
 }
 
 func TestProgramCheck(t *testing.T) {
