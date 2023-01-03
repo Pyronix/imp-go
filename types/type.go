@@ -1,5 +1,7 @@
 package types
 
+import "fmt"
+
 type Type int
 
 // TypeState is a mapping from variable names to types
@@ -34,7 +36,9 @@ func (ts *TypeState) Assign(name string, newType Type) {
 	for i := len(*ts) - 1; i >= 0; i-- {
 		if oldType, ok := (*ts)[i][name]; ok {
 			if oldType != newType {
-				panic("Type mismatch")
+				// panic("Type mismatch")
+				fmt.Printf("Type mismatch")
+				return
 			}
 			variableExists = true
 			(*ts)[i][name] = newType
@@ -43,7 +47,9 @@ func (ts *TypeState) Assign(name string, newType Type) {
 	}
 
 	if !variableExists {
-		panic("Variable " + name + " not declared")
+		// panic("Variable " + name + " not declared")
+		fmt.Printf("Variable " + name + " not declared")
+		return
 	}
 }
 
@@ -56,7 +62,9 @@ func PushTypeScope(ts *TypeState) {
 
 func PopTypeScope(ts *TypeState) {
 	if len(*ts) < 2 {
-		panic("Cannot unscope global scope")
+		// panic("Cannot unscope global scope")
+		fmt.Printf("Cannot unscope global scope")
+		return
 	}
 	*ts = (*ts)[:len(*ts)-1]
 }

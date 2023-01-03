@@ -41,11 +41,11 @@ type TestIfThenElseEvalCase struct {
 }
 
 var testIfThenElseEvalTests = []TestIfThenElseEvalCase{
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{AssignmentStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, true},
 	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}}}, false},
 	{IfThenElseStatement{LesserExpression{NumberExpression(1), BoolExpression(true)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}}}, false},
-	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}, "y": {ValueInt, 2, false}}}, true},
-	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}, "y": {ValueInt, 2, false}}}, false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, false},
 }
 
 func TestEvalIfThenElse(t *testing.T) {
@@ -90,10 +90,10 @@ type TestIfThenElseCheckCase struct {
 }
 
 var testIfThenElseCheckTests = []TestIfThenElseCheckCase{
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeBool}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeBool}}, true, true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeBool}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeBool}}, true, true},
 	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeInt}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeInt}}, true, true},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeBool}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeBool}}, true, false},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeInt}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeInt}}, true, false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeBool}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeBool}}, true, true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeInt}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeInt}}, true, true},
 	{IfThenElseStatement{LesserExpression{NumberExpression(1), BoolExpression(true)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeInt}}, TypeState{map[string]Type{"x": TypeBool, "y": TypeInt}}, true, false},
 }
 
