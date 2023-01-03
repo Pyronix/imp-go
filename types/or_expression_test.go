@@ -72,6 +72,8 @@ type TestOrEvalCase struct {
 
 var testOrEvalTests = []TestOrEvalCase{
 	{OrExpression{BoolExpression(true), BoolExpression(true)}, BoolValue(true), true},
+	{OrExpression{BoolExpression(false), BoolExpression(true)}, BoolValue(true), true},
+
 	{OrExpression{BoolExpression(true), BoolExpression(false)}, BoolValue(true), true},
 
 	{OrExpression{NumberExpression(-1), BoolExpression(true)}, UndefinedValue(), true},

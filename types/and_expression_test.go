@@ -75,6 +75,7 @@ type TestAndEvalCase struct {
 var testAndEvalTests = []TestAndEvalCase{
 	{AndExpression{BoolExpression(true), BoolExpression(true)}, BoolValue(true), true},
 	{AndExpression{BoolExpression(true), BoolExpression(false)}, BoolValue(false), true},
+	{AndExpression{BoolExpression(false), BoolExpression(true)}, BoolValue(false), true},
 
 	{AndExpression{NumberExpression(-1), BoolExpression(true)}, UndefinedValue(), true},
 	{AndExpression{NumberExpression(-1), NumberExpression(-1)}, UndefinedValue(), true},
