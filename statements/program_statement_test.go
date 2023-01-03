@@ -37,16 +37,16 @@ type TestProgramEvalCase struct {
 }
 
 var testProgramEvalTests = []TestProgramEvalCase{
-	{ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, ValueState{"x": Value{ValueInt, 1, false}}, true},
-	{ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, ValueState{"x": Value{ValueInt, 2, false}}, false},
-	{ProgramStatement{DeclarationStatement{"x", BoolExpression(true)}}, ValueState{"x": Value{ValueInt, 0, true}}, false},
+	{ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, true},
+	{ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}}}, false},
+	{ProgramStatement{DeclarationStatement{"x", BoolExpression(true)}}, ValueState{map[string]Value{"x": {ValueInt, 0, true}}}, false},
 }
 
 func TestProgramEval(t *testing.T) {
 	for _, test := range testProgramEvalTests {
-		got := ValueState{"x": Value{ValueInt, 1, false}}
+		got := ValueState{map[string]Value{"x": {ValueInt, 1, false}}}
 
-		test.input.Eval(got)
+		test.input.Eval(&got)
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
@@ -85,15 +85,15 @@ type TestProgramCheckCase struct {
 }
 
 var testProgramCheckTests = []TestProgramCheckCase{
-	{TypeState{"x": TypeInt}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{"x": TypeInt}, true, true},
-	{TypeState{"x": TypeInt}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{"x": TypeInt}, false, false},
-	{TypeState{"x": TypeInt}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{"x": TypeBool}, true, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{map[string]Value{"x": TypeInt}}, true, true},
+	{TypeState{map[string]Value{"x": TypeInt}}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{map[string]Value{"x": TypeInt}}, false, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, ProgramStatement{DeclarationStatement{"x", NumberExpression(1)}}, TypeState{map[string]Value{"x": TypeBool}}, true, false},
 }
 
 func TestProgramCheck(t *testing.T) {
 	for _, test := range testProgramCheckTests {
 		got := test.input1
-		if (reflect.DeepEqual(got, test.want1) && test.input2.Check(got) == test.want2) != test.compliant {
+		if (reflect.DeepEqual(got, test.want1) && test.input2.Check(&got) == test.want2) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want1), test.compliant)
 		}
 	}

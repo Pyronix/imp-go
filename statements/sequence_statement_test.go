@@ -42,15 +42,15 @@ type TestSequenceEvalCase struct {
 }
 
 var testSequenceEvalTests = []TestSequenceEvalCase{
-	{ValueState{"x": Value{ValueInt, 0, false}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, ValueState{"x": Value{ValueInt, 1, false}, "y": Value{ValueInt, 1, false}}, true},
-	{ValueState{"x": Value{ValueInt, 0, false}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, ValueState{"x": Value{ValueInt, 1, false}, "y": Value{ValueInt, 2, false}}, false},
-	{ValueState{"x": Value{ValueInt, 0, false}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, ValueState{"x": Value{ValueInt, 2, false}, "y": Value{ValueInt, 1, false}}, false},
-	{ValueState{"x": Value{ValueInt, 0, false}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, ValueState{"x": Value{ValueInt, 2, false}, "y": Value{ValueInt, 2, false}}, false},
+	{ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}, "y": {ValueInt, 1, false}}}, true},
+	{ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}, "y": {ValueInt, 2, false}}}, false},
+	{ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}, "y": {ValueInt, 1, false}}}, false},
+	{ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}, "y": {ValueInt, 2, false}}}, false},
 }
 
 func TestSequenceEval(t *testing.T) {
 	for _, test := range testSequenceEvalTests {
-		test.sequence.Eval(test.input)
+		test.sequence.Eval(&test.input)
 		if reflect.DeepEqual(test.input, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(test.input), StructToJson(test.want), test.compliant)
 		}
@@ -91,20 +91,20 @@ type TestSequenceCheckCase struct {
 }
 
 var testSequenceCheckTests = []TestSequenceCheckCase{
-	{TypeState{"x": TypeInt}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeInt}, true, true},
-	{TypeState{}, SequenceStatement{DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeInt}, true, true},
-	{TypeState{"x": TypeInt}, SequenceStatement{AssignmentStatement{"x", BoolExpression(true)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt}, false, true},
-	{TypeState{"x": TypeInt}, SequenceStatement{AssignmentStatement{"x", BoolExpression(true)}, DeclarationStatement{"y", BoolExpression(true)}}, TypeState{"x": TypeInt}, false, true},
-	{TypeState{"x": TypeInt}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeInt}, false, false},
-	{TypeState{}, SequenceStatement{DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeInt}, false, false},
-	{TypeState{"x": TypeInt}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeInt}, false, false},
-	{TypeState{"x": TypeInt}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeBool}, true, false},
-	{TypeState{"x": TypeInt}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{"x": TypeInt, "y": TypeBool}, false, false},
+	{TypeState{map[string]Type{"x": TypeInt}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeInt}}, true, true},
+	{TypeState{map[string]Type{}}, SequenceStatement{DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeInt}}, true, true},
+	{TypeState{map[string]Type{"x": TypeInt}}, SequenceStatement{AssignmentStatement{"x", BoolExpression(true)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{map[string]Type{"x": TypeInt}}, false, true},
+	{TypeState{map[string]Type{"x": TypeInt}}, SequenceStatement{AssignmentStatement{"x", BoolExpression(true)}, DeclarationStatement{"y", BoolExpression(true)}}, TypeState{map[string]Type{"x": TypeInt}}, false, true},
+	{TypeState{map[string]Type{"x": TypeInt}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeInt}}, false, false},
+	{TypeState{map[string]Type{}}, SequenceStatement{DeclarationStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeInt}}, false, false},
+	{TypeState{map[string]Type{"x": TypeInt}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeInt}}, false, false},
+	{TypeState{map[string]Type{"x": TypeInt}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeBool}}, true, false},
+	{TypeState{map[string]Type{"x": TypeInt}}, SequenceStatement{AssignmentStatement{"x", NumberExpression(1)}, DeclarationStatement{"y", NumberExpression(1)}}, TypeState{map[string]Type{"x": TypeInt, "y": TypeBool}}, false, false},
 }
 
 func TestSequenceCheck(t *testing.T) {
 	for _, test := range testSequenceCheckTests {
-		if ((test.sequence.Check(test.input) == test.want2) && reflect.DeepEqual(test.input, test.want1)) != test.compliant {
+		if ((test.sequence.Check(&test.input) == test.want2) && reflect.DeepEqual(test.input, test.want1)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(test.input), StructToJson(test.want1), test.compliant)
 		}
 	}

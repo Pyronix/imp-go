@@ -40,19 +40,19 @@ type TestPrintEvalCase struct {
 }
 
 var testPrintEvalTests = []TestPrintEvalCase{
-	{PrintStatement{NumberExpression(1)}, ValueState{"x": Value{ValueInt, 1, false}}, ValueState{"x": Value{ValueInt, 1, false}}, true},
-	{PrintStatement{NumberExpression(1)}, ValueState{"x": Value{ValueInt, 1, false}}, ValueState{"x": Value{ValueInt, 2, false}}, false},
-	{PrintStatement{NumberExpression(1)}, ValueState{"x": Value{ValueInt, 1, false}}, ValueState{"x": Value{ValueInt, 1, true}}, false},
-	{PrintStatement{NumberExpression(1)}, ValueState{"x": Value{ValueInt, 1, false}}, ValueState{"x": Value{ValueInt, 1, false}, "y": Value{ValueInt, 1, false}}, false},
-	{PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, ValueState{"x": Value{ValueInt, 1, false}}, ValueState{"x": Value{ValueInt, 1, false}}, true},
-	{PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, ValueState{"x": Value{ValueInt, 1, false}}, ValueState{"x": Value{ValueInt, 2, false}}, false},
-	{PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, ValueState{"x": Value{ValueInt, 1, false}}, ValueState{"x": Value{ValueInt, 1, true}}, false},
-	{PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, ValueState{"x": Value{ValueInt, 1, false}}, ValueState{"x": Value{ValueInt, 1, false}, "y": Value{ValueInt, 1, false}}, false},
+	{PrintStatement{NumberExpression(1)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, true},
+	{PrintStatement{NumberExpression(1)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}}}, false},
+	{PrintStatement{NumberExpression(1)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 1, true}}}, false},
+	{PrintStatement{NumberExpression(1)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}, "y": {ValueInt, 1, false}}}, false},
+	{PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, true},
+	{PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}}}, false},
+	{PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 1, true}}}, false},
+	{PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}, "y": {ValueInt, 1, false}}}, false},
 }
 
 func TestPrintEval(t *testing.T) {
 	for _, test := range testPrintEvalTests {
-		test.input.Eval(test.vs)
+		test.input.Eval(&test.vs)
 		if reflect.DeepEqual(test.vs, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(test.vs), StructToJson(test.want), test.compliant)
 		}
@@ -93,24 +93,24 @@ type TestPrintCheckCase struct {
 }
 
 var testPrintCheckTests = []TestPrintCheckCase{
-	{TypeState{"x": TypeInt}, PrintStatement{NumberExpression(1)}, TypeState{"x": TypeInt}, true, true},
-	{TypeState{"x": TypeInt}, PrintStatement{NumberExpression(1)}, TypeState{"x": TypeInt}, false, false},
-	{TypeState{"x": TypeInt}, PrintStatement{NumberExpression(1)}, TypeState{"x": TypeBool}, true, false},
-	{TypeState{"x": TypeInt}, PrintStatement{NumberExpression(1)}, TypeState{"x": TypeBool}, false, false},
-	{TypeState{"x": TypeInt}, PrintStatement{NumberExpression(1)}, TypeState{"x": TypeInt, "y": TypeInt}, true, false},
-	{TypeState{"x": TypeInt}, PrintStatement{NumberExpression(1)}, TypeState{"x": TypeInt, "y": TypeInt}, false, false},
-	{TypeState{"x": TypeInt}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{"x": TypeInt}, true, true},
-	{TypeState{"x": TypeInt}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{"x": TypeInt}, false, false},
-	{TypeState{"x": TypeInt}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{"x": TypeBool}, true, false},
-	{TypeState{"x": TypeInt}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{"x": TypeBool}, false, false},
-	{TypeState{"x": TypeInt}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{"x": TypeInt, "y": TypeInt}, true, false},
-	{TypeState{"x": TypeInt}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{"x": TypeInt, "y": TypeInt}, false, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{NumberExpression(1)}, TypeState{map[string]Value{"x": TypeInt}}, true, true},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{NumberExpression(1)}, TypeState{map[string]Value{"x": TypeInt}}, false, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{NumberExpression(1)}, TypeState{map[string]Value{"x": TypeBool}}, true, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{NumberExpression(1)}, TypeState{map[string]Value{"x": TypeBool}}, false, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{NumberExpression(1)}, TypeState{map[string]Value{"x": TypeInt, "y": TypeInt}}, true, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{NumberExpression(1)}, TypeState{map[string]Value{"x": TypeInt, "y": TypeInt}}, false, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{map[string]Value{"x": TypeInt}}, true, true},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{map[string]Value{"x": TypeInt}}, false, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{map[string]Value{"x": TypeBool}}, true, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{map[string]Value{"x": TypeBool}}, false, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{map[string]Value{"x": TypeInt, "y": TypeInt}}, true, false},
+	{TypeState{map[string]Value{"x": TypeInt}}, PrintStatement{PlusExpression{NumberExpression(1), NumberExpression(2)}}, TypeState{map[string]Value{"x": TypeInt, "y": TypeInt}}, false, false},
 }
 
 func TestPrintCheck(t *testing.T) {
 	for _, test := range testPrintCheckTests {
 		got := test.input1
-		if (reflect.DeepEqual(got, test.want1) && test.input2.Check(got) == test.want2) != test.compliant {
+		if (reflect.DeepEqual(got, test.want1) && test.input2.Check(&got) == test.want2) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want1), test.compliant)
 		}
 	}
