@@ -66,7 +66,7 @@ var TestLesserEvalTests = []TestLesserEvalCase{
 
 func TestLesserEval(t *testing.T) {
 	for _, test := range TestLesserEvalTests {
-		if got := test.input.Eval(ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+		if got := test.input.Eval(&ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
@@ -88,7 +88,7 @@ var TestLesserInferTests = []TestLesserInferCase{
 
 func TestLesserInfer(t *testing.T) {
 	for _, test := range TestLesserInferTests {
-		if got := test.input.Infer(TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+		if got := test.input.Infer(&TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}

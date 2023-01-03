@@ -15,10 +15,10 @@ func (x BoolExpression) Pretty() string {
 
 }
 
-func (x BoolExpression) Eval(s ValueState) Value {
+func (x BoolExpression) Eval(s *ValueState) Value {
 	return BoolValue((bool)(x))
 }
 
-func (x BoolExpression) Infer(t TypeState) Type {
+func (x BoolExpression) Infer(t *TypeState) Type {
 	return TypeBool
 }

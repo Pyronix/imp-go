@@ -16,15 +16,15 @@ func (block BlockStatement) Pretty() string {
 	return "{" + block.stmt.Pretty() + "}"
 }
 
-func (block BlockStatement) Eval(s ValueState) {
-	PushValueScope(&s)
+func (block BlockStatement) Eval(s *ValueState) {
+	PushValueScope(s)
 	block.stmt.Eval(s)
-	PopValueScope(&s)
+	PopValueScope(s)
 }
 
-func (block BlockStatement) Check(t TypeState) bool {
-	PushTypeScope(&t)
+func (block BlockStatement) Check(t *TypeState) bool {
+	PushTypeScope(t)
 	checkOk := block.stmt.Check(t)
-	PopTypeScope(&t)
+	PopTypeScope(t)
 	return checkOk
 }

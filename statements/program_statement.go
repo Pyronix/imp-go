@@ -3,21 +3,21 @@ package statements
 import . "imp/types"
 
 type ProgramStatement struct {
-	blockStmt BlockStatement
+	stmt Statement
 }
 
-func Program(x BlockStatement) ProgramStatement {
+func Program(x Statement) ProgramStatement {
 	return ProgramStatement{x}
 }
 
 func (prog ProgramStatement) Pretty() string {
-	return prog.blockStmt.Pretty()
+	return prog.stmt.Pretty()
 }
 
-func (prog ProgramStatement) Eval(s ValueState) {
-	prog.blockStmt.Eval(s)
+func (prog ProgramStatement) Eval(s *ValueState) {
+	prog.stmt.Eval(s)
 }
 
-func (prog ProgramStatement) Check(t TypeState) bool {
-	return prog.blockStmt.Check(t)
+func (prog ProgramStatement) Check(t *TypeState) bool {
+	return prog.stmt.Check(t)
 }

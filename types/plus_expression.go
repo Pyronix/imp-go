@@ -22,7 +22,7 @@ func (e PlusExpression) Pretty() string {
 	return x
 }
 
-func (e PlusExpression) Eval(s ValueState) Value {
+func (e PlusExpression) Eval(s *ValueState) Value {
 	n1 := e[0].Eval(s)
 	n2 := e[1].Eval(s)
 	if n1.ValueType == ValueInt && n2.ValueType == ValueInt {
@@ -31,7 +31,7 @@ func (e PlusExpression) Eval(s ValueState) Value {
 	return UndefinedValue()
 }
 
-func (e PlusExpression) Infer(t TypeState) Type {
+func (e PlusExpression) Infer(t *TypeState) Type {
 	t1 := e[0].Infer(t)
 	t2 := e[1].Infer(t)
 	if t1 == TypeInt && t2 == TypeInt {

@@ -14,7 +14,7 @@ func While(cond Expression, blockStmt BlockStatement) Statement {
 	return WhileStatement{cond, blockStmt}
 }
 
-func (whi WhileStatement) Eval(s ValueState) {
+func (whi WhileStatement) Eval(s *ValueState) {
 	for {
 		v := whi.cond.Eval(s)
 		if v.ValueType != ValueBool {
@@ -38,7 +38,7 @@ func (whi WhileStatement) Pretty() string {
 	return x
 }
 
-func (whi WhileStatement) Check(t TypeState) bool {
+func (whi WhileStatement) Check(t *TypeState) bool {
 	ty := whi.cond.Infer(t)
 	if ty != TypeBool {
 		return false

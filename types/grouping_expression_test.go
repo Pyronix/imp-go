@@ -76,7 +76,7 @@ var testGroupingEvalTests = []TestGroupingEvalCase{
 
 func TestGroupingEval(t *testing.T) {
 	for _, test := range testGroupingEvalTests {
-		if got := test.input.Eval(ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+		if got := test.input.Eval(&ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
@@ -102,7 +102,7 @@ var testGroupingInferTests = []TestGroupingInferCase{
 
 func TestGroupingInfer(t *testing.T) {
 	for _, test := range testGroupingInferTests {
-		if got := test.input.Infer(TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+		if got := test.input.Infer(&TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}

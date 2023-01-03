@@ -15,7 +15,7 @@ func Ite(x Expression, y BlockStatement, z BlockStatement) Statement {
 	return IfThenElseStatement{x, y, z}
 }
 
-func (ite IfThenElseStatement) Eval(s ValueState) {
+func (ite IfThenElseStatement) Eval(s *ValueState) {
 	v := ite.cond.Eval(s)
 	if v.ValueType == ValueBool {
 		switch {
@@ -41,7 +41,7 @@ func (ite IfThenElseStatement) Pretty() string {
 	return x
 }
 
-func (ite IfThenElseStatement) Check(t TypeState) bool {
+func (ite IfThenElseStatement) Check(t *TypeState) bool {
 	ty := ite.cond.Infer(t)
 	if ty != TypeBool {
 		return false

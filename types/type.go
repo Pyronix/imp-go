@@ -24,20 +24,20 @@ func ShowType(t Type) string {
 	return s
 }
 
-func (ts TypeState) Declare(name string, newType Type) {
-	ts[len(ts)-1][name] = newType
+func (ts *TypeState) Declare(name string, newType Type) {
+	(*ts)[len(*ts)-1][name] = newType
 }
 
-func (ts TypeState) Assign(name string, newType Type) {
+func (ts *TypeState) Assign(name string, newType Type) {
 	var variableExists bool = false
 
-	for i := len(ts) - 1; i >= 0; i-- {
-		if oldType, ok := ts[i][name]; ok {
+	for i := len(*ts) - 1; i >= 0; i-- {
+		if oldType, ok := (*ts)[i][name]; ok {
 			if oldType != newType {
 				panic("Type mismatch")
 			}
 			variableExists = true
-			ts[i][name] = newType
+			(*ts)[i][name] = newType
 			break
 		}
 	}
@@ -48,24 +48,31 @@ func (ts TypeState) Assign(name string, newType Type) {
 }
 
 func PushTypeScope(ts *TypeState) {
+	if len(*ts) == 0 {
+		*ts = append(*ts, make(map[string]Type))
+	}
 	*ts = append(*ts, make(map[string]Type))
 }
 
 func PopTypeScope(ts *TypeState) {
-	if len(*ts) > 1 {
-		*ts = (*ts)[:len(*ts)-1]
+	if len(*ts) < 2 {
+		panic("Cannot unscope global scope")
 	}
+	*ts = (*ts)[:len(*ts)-1]
 }
 
-func (ts TypeState) GetCurrentTypeScope() map[string]Type {
-	return ts[len(ts)-1]
+func (ts *TypeState) GetCurrentTypeScope() map[string]Type {
+	if len(*ts) == 0 {
+		*ts = append(*ts, make(map[string]Type))
+	}
+	return (*ts)[len(*ts)-1]
 }
 
-func (ts TypeState) LookUpTypeByVariableName(name string) (Type, bool) {
-	for i := len(ts) - 1; i >= 0; i-- {
-		if typ, ok := ts[i][name]; ok {
+func (ts *TypeState) LookUpTypeByVariableName(name string) (Type, bool) {
+	for i := len(*ts) - 1; i >= 0; i-- {
+		if typ, ok := (*ts)[i][name]; ok {
 			return typ, true
 		}
 	}
-	return -1, false
+	return TypeIllTyped, false
 }

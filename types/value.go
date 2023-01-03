@@ -40,20 +40,20 @@ func ShowVal(v Value) string {
 	return s
 }
 
-func (vs ValueState) Declare(name string, newValue Value) {
-	vs[len(vs)-1][name] = newValue
+func (vs *ValueState) Declare(name string, newValue Value) {
+	(*vs)[len(*vs)-1][name] = newValue
 }
 
-func (vs ValueState) Assign(name string, newValue Value) {
+func (vs *ValueState) Assign(name string, newValue Value) {
 	var variableExists bool = false
 
-	for i := len(vs) - 1; i >= 0; i-- {
-		if oldValue, ok := vs[i][name]; ok {
+	for i := len(*vs) - 1; i >= 0; i-- {
+		if oldValue, ok := (*vs)[i][name]; ok {
 			if oldValue.ValueType != newValue.ValueType {
 				panic("Type mismatch")
 			}
 			variableExists = true
-			vs[i][name] = newValue
+			(*vs)[i][name] = newValue
 			break
 		}
 	}
@@ -64,22 +64,29 @@ func (vs ValueState) Assign(name string, newValue Value) {
 }
 
 func PushValueScope(vs *ValueState) {
+	if len(*vs) == 0 {
+		*vs = append(*vs, make(map[string]Value))
+	}
 	*vs = append(*vs, make(map[string]Value))
 }
 
 func PopValueScope(vs *ValueState) {
-	if len(*vs) > 1 {
-		*vs = (*vs)[:len(*vs)-1]
+	if len(*vs) < 2 {
+		panic("Cannot unscope global scope")
 	}
+	*vs = (*vs)[:len(*vs)-1]
 }
 
-func (vs ValueState) GetCurrentValueScope() map[string]Value {
-	return vs[len(vs)-1]
+func (vs *ValueState) GetCurrentValueScope() map[string]Value {
+	if len(*vs) == 0 {
+		*vs = append(*vs, make(map[string]Value))
+	}
+	return (*vs)[len(*vs)-1]
 }
 
-func (vs ValueState) LookUpValueByVariableName(name string) (Value, bool) {
-	for i := len(vs) - 1; i >= 0; i-- {
-		if value, ok := vs[i][name]; ok {
+func (vs *ValueState) LookUpValueByVariableName(name string) (Value, bool) {
+	for i := len(*vs) - 1; i >= 0; i-- {
+		if value, ok := (*vs)[i][name]; ok {
 			return value, true
 		}
 	}

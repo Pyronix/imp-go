@@ -92,7 +92,7 @@ var TestEqualityEvalTests = []TestEqualityEvalCase{
 
 func TestEqualityEval(t *testing.T) {
 	for _, test := range TestEqualityEvalTests {
-		if got := test.input.Eval(ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+		if got := test.input.Eval(&ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
@@ -119,7 +119,7 @@ var TestEqualityInferTests = []TestEqualityInferCase{
 
 func TestEqualityInfer(t *testing.T) {
 	for _, test := range TestEqualityInferTests {
-		if got := test.input.Infer(TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+		if got := test.input.Infer(&TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
