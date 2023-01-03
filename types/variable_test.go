@@ -39,11 +39,11 @@ type TestVariableEvalCase struct {
 	compliant bool
 }
 
-var vs = ValueState{
+var vs = ValueState{map[string]Value{
 	"x": Value{ValueType: ValueInt, IntValue: 1},
 	"y": Value{ValueType: ValueBool, BoolValue: true},
 	"z": Value{ValueType: Undefined},
-}
+}}
 
 var testVariableEvalTests = []TestVariableEvalCase{
 	{Variable("x"), Value{ValueType: ValueInt, IntValue: 1}, vs, true},
@@ -56,7 +56,7 @@ var testVariableEvalTests = []TestVariableEvalCase{
 
 func TestVariableEval(t *testing.T) {
 	for _, test := range testVariableEvalTests {
-		if got := test.input.Eval(test.vs); (reflect.DeepEqual(got, test.want)) != test.compliant {
+		if got := test.input.Eval(&test.vs); (reflect.DeepEqual(got, test.want)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
@@ -71,11 +71,11 @@ type TestVariableInferCase struct {
 	compliant bool
 }
 
-var ts = TypeState{
+var ts = TypeState{map[string]Type{
 	"x": TypeInt,
 	"y": TypeBool,
 	"z": TypeIllTyped,
-}
+}}
 
 var testVariableInferTests = []TestVariableInferCase{
 	{Variable("x"), TypeInt, ts, true},
@@ -89,7 +89,7 @@ var testVariableInferTests = []TestVariableInferCase{
 
 func TestVariableInfer(t *testing.T) {
 	for _, test := range testVariableInferTests {
-		if got := test.input.Infer(test.vs); (reflect.DeepEqual(got, test.want)) != test.compliant {
+		if got := test.input.Infer(&test.vs); (reflect.DeepEqual(got, test.want)) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
