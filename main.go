@@ -50,7 +50,7 @@ func main() {
 		},
 	}
 
-	if err := app.Run([]string{"./imp", "run", "./examples/scopes.imp"}); err != nil {
+	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
 }

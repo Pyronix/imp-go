@@ -2,12 +2,12 @@ package parser
 
 import (
 	"fmt"
-	"imp/statements"
 	"io"
 	"strconv"
 )
 
 import . "imp/types"
+import . "imp/statements"
 
 type Parser struct {
 	tokens   *Tape[Token]
@@ -28,17 +28,17 @@ func NewParserFromReader(input io.Reader) *Parser {
 	}
 }
 
-func (p *Parser) ParseProgram() statements.ProgramStatement {
+func (p *Parser) ParseProgram() ProgramStatement {
 	statement := p.ParseSequence()
 
 	if p.tokens.position != p.tokens.size-1 && p.tokens.Peek().Type != EOF {
 		panic(fmt.Errorf("unexpected token %q encountered, expected syntax not matched", p.tokens.Peek()))
 	}
 
-	return statements.Program(statement)
+	return Program(statement)
 }
 
-func (p *Parser) ParseBlock() statements.BlockStatement {
+func (p *Parser) ParseBlock() BlockStatement {
 	if p.tokens.Next().Type != BLOCKOPEN {
 		p.tokens.Rewind()
 		panic(fmt.Errorf("expected '{', got %q", p.tokens.Peek()))
@@ -51,13 +51,13 @@ func (p *Parser) ParseBlock() statements.BlockStatement {
 		panic(fmt.Errorf("expected '}', got %q", p.tokens.Peek()))
 	}
 
-	return statements.Block(statement)
+	return Block(statement)
 }
 
-func (p *Parser) ParseSequence() statements.Statement {
+func (p *Parser) ParseSequence() Statement {
 	statement := p.ParseStatement()
 
-	stmts := []statements.Statement{statement}
+	stmts := []Statement{statement}
 
 	for p.tokens.Peek().Type == SEMICOLON {
 		p.tokens.Next()
@@ -69,21 +69,21 @@ func (p *Parser) ParseSequence() statements.Statement {
 
 	if len(stmts) > 1 {
 		for i := len(stmts) - 2; i >= 0; i-- {
-			stmts[i] = statements.Sequence(stmts[i], stmts[i+1])
+			stmts[i] = Sequence(stmts[i], stmts[i+1])
 		}
 	}
 
 	return stmts[0]
 }
 
-func (p *Parser) ParseStatement() statements.Statement {
+func (p *Parser) ParseStatement() Statement {
 	switch next := p.tokens.Next(); {
 	case next.Type == WHILE:
 		exp := p.ParseExpression()
 
 		block := p.ParseBlock()
 
-		return statements.While(exp, block)
+		return While(exp, block)
 	case next.Type == IF:
 		exp := p.ParseExpression()
 
@@ -96,15 +96,15 @@ func (p *Parser) ParseStatement() statements.Statement {
 
 		elseBlock := p.ParseBlock()
 
-		return statements.Ite(exp, thenBlock, elseBlock)
+		return Ite(exp, thenBlock, elseBlock)
 	case next.Type == PRINT:
-		return statements.Print(p.ParseExpression())
+		return Print(p.ParseExpression())
 	case next.Type == IDENTIFIER:
 		switch operator := p.tokens.Next(); {
 		case operator.Type == ASSIGMENT:
-			return statements.Assignment(next.Value, p.ParseExpression())
+			return Assignment(next.Value, p.ParseExpression())
 		case operator.Type == DECLARATION:
-			return statements.Declaration(next.Value, p.ParseExpression())
+			return Declaration(next.Value, p.ParseExpression())
 		default:
 			panic(fmt.Errorf("expected declaration or assignment, got %q", operator))
 		}
