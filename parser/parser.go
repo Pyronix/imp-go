@@ -29,7 +29,11 @@ func NewParserFromReader(input io.Reader) *Parser {
 }
 
 func (p *Parser) ParseProgram() statements.ProgramStatement {
-	statement := p.ParseStatement()
+	statement := p.ParseSequence()
+
+	if p.tokens.position != p.tokens.size-1 && p.tokens.Peek().Type != EOF {
+		panic(fmt.Errorf("unexpected token %q encountered, expected syntax not matched", p.tokens.Peek()))
+	}
 
 	return statements.Program(statement)
 }
