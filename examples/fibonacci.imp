@@ -1,0 +1,10 @@
+last := 0;
+cur := 1;
+
+while cur < 100000 {
+    print cur;
+
+    temp := last;
+    last = cur;
+    cur = cur + temp
+}
