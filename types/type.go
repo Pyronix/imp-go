@@ -29,22 +29,19 @@ func (ts *TypeState) Declare(name string, newType Type) {
 }
 
 func (ts *TypeState) Assign(name string, newType Type) {
-	var variableExists bool = false
-
 	for i := len(*ts) - 1; i >= 0; i-- {
 		if oldType, ok := (*ts)[i][name]; ok {
 			if oldType != newType {
 				panic("Type mismatch")
 			}
-			variableExists = true
+
 			(*ts)[i][name] = newType
-			break
+
+			return
 		}
 	}
 
-	if !variableExists {
-		panic("Variable " + name + " not declared")
-	}
+	panic("Variable " + name + " not declared")
 }
 
 func PushTypeScope(ts *TypeState) {

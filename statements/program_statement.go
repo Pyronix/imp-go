@@ -14,8 +14,8 @@ func (prog ProgramStatement) Pretty() string {
 	return prog.stmt.Pretty()
 }
 
-func (prog ProgramStatement) Eval(s *ValueState) {
-	prog.stmt.Eval(s)
+func (prog ProgramStatement) Eval(s *ValueState) Value {
+	return prog.stmt.Eval(s)
 }
 
 func (prog ProgramStatement) Check(t *TypeState) bool {

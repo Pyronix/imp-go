@@ -40,27 +40,24 @@ func ShowVal(v Value) string {
 	return s
 }
 
-func (vs *ValueState) Declare(name string, newValue Value) {
+func (vs *ValueState) Declare(name string, newValue Value) Value {
 	(*vs)[len(*vs)-1][name] = newValue
+	return newValue
 }
 
-func (vs *ValueState) Assign(name string, newValue Value) {
-	var variableExists bool = false
-
+func (vs *ValueState) Assign(name string, newValue Value) Value {
 	for i := len(*vs) - 1; i >= 0; i-- {
 		if oldValue, ok := (*vs)[i][name]; ok {
 			if oldValue.ValueType != newValue.ValueType {
 				panic("Type mismatch")
 			}
-			variableExists = true
 			(*vs)[i][name] = newValue
-			break
+
+			return newValue
 		}
 	}
 
-	if !variableExists {
-		panic("Variable " + name + " not declared")
-	}
+	panic("Variable " + name + " not declared")
 }
 
 func PushValueScope(vs *ValueState) {
