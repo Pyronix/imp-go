@@ -1,7 +1,6 @@
 package statements
 
 import (
-	"fmt"
 	. "imp/types"
 )
 
@@ -18,8 +17,7 @@ func (whi WhileStatement) Eval(s *ValueState) {
 	for {
 		v := whi.cond.Eval(s)
 		if v.ValueType != ValueBool {
-			fmt.Printf("while Eval fail")
-			break
+			panic("while Eval fail")
 		}
 		if !v.BoolValue {
 			break

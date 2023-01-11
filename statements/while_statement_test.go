@@ -36,19 +36,27 @@ func TestWhile(t *testing.T) {
 type TestWhileEvalCase struct {
 	input     WhileStatement
 	want      ValueState
+	panic     bool
 	compliant bool
 }
 
 var testWhileEvalTests = []TestWhileEvalCase{
-	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, ValueState{map[string]Value{"x": {ValueInt, 10, false}}}, true},
-	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, ValueState{map[string]Value{"x": {ValueInt, 100, false}}}, false},
-	{WhileStatement{NumberExpression(1), BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, ValueState{map[string]Value{"x": {ValueInt, 100, false}}}, false},
+	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, ValueState{map[string]Value{"x": {ValueInt, 10, false}}}, false, true},
+	{WhileStatement{LesserExpression{Variable("x"), NumberExpression(10)}, BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, ValueState{map[string]Value{"x": {ValueInt, 100, false}}}, false, false},
+	{WhileStatement{NumberExpression(1), BlockStatement{AssignmentStatement{"x", PlusExpression{Variable("x"), NumberExpression(1)}}}}, ValueState{map[string]Value{"x": {ValueInt, 100, false}}}, true, false},
 }
 
 func TestEvalWhile(t *testing.T) {
 	for _, test := range testWhileEvalTests {
 		got := ValueState{map[string]Value{"x": {ValueInt, 0, false}}}
-		test.input.Eval(&got)
+		func() {
+			defer func() { _ = recover() }()
+			test.input.Eval(&got)
+			if reflect.DeepEqual(got, test.want) != test.compliant || test.panic != (recover() != nil) {
+				t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+			}
+		}()
+
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}

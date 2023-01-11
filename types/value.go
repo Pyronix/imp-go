@@ -1,7 +1,5 @@
 package types
 
-import "fmt"
-
 type Kind int
 
 const (
@@ -52,9 +50,7 @@ func (vs *ValueState) Assign(name string, newValue Value) {
 	for i := len(*vs) - 1; i >= 0; i-- {
 		if oldValue, ok := (*vs)[i][name]; ok {
 			if oldValue.ValueType != newValue.ValueType {
-				// panic("Type mismatch")
-				fmt.Printf("Type mismatch")
-				return
+				panic("Type mismatch")
 			}
 			variableExists = true
 			(*vs)[i][name] = newValue
@@ -63,9 +59,7 @@ func (vs *ValueState) Assign(name string, newValue Value) {
 	}
 
 	if !variableExists {
-		// panic("Variable " + name + " not declared")
-		fmt.Printf("Variable " + name + " not declared")
-		return
+		panic("Variable " + name + " not declared")
 	}
 }
 
@@ -78,9 +72,7 @@ func PushValueScope(vs *ValueState) {
 
 func PopValueScope(vs *ValueState) {
 	if len(*vs) < 2 {
-		// panic("Cannot unscope global scope")
-		fmt.Printf("Cannot unscope global scope")
-		return
+		panic("Cannot unscope global scope")
 	}
 	*vs = (*vs)[:len(*vs)-1]
 }

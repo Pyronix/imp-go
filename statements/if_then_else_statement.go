@@ -1,7 +1,6 @@
 package statements
 
 import (
-	"fmt"
 	. "imp/types"
 )
 
@@ -25,7 +24,7 @@ func (ite IfThenElseStatement) Eval(s *ValueState) {
 			ite.elseBlockStmt.Eval(s)
 		}
 	} else {
-		fmt.Printf("if-then-else Eval fail")
+		panic("if-then-else Eval fail")
 	}
 }
 

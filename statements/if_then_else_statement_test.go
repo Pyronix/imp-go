@@ -37,23 +37,27 @@ type TestIfThenElseEvalCase struct {
 	input     IfThenElseStatement
 	vs        ValueState
 	want      ValueState
+	panic     bool
 	compliant bool
 }
 
 var testIfThenElseEvalTests = []TestIfThenElseEvalCase{
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{AssignmentStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, true},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}}}, false},
-	{IfThenElseStatement{LesserExpression{NumberExpression(1), BoolExpression(true)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}}}, false},
-	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, true},
-	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{AssignmentStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, false, true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), NumberExpression(2)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}}}, false, false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(1), BoolExpression(true)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 2, false}}}, true, false},
+	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, false, true},
+	{IfThenElseStatement{LesserExpression{NumberExpression(2), NumberExpression(1)}, BlockStatement{DeclarationStatement{"x", NumberExpression(1)}}, BlockStatement{DeclarationStatement{"y", NumberExpression(2)}}}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, ValueState{map[string]Value{"x": {ValueInt, 0, false}}}, false, false},
 }
 
 func TestEvalIfThenElse(t *testing.T) {
 	for _, test := range testIfThenElseEvalTests {
-		test.input.Eval(&test.vs)
-		if reflect.DeepEqual(test.vs, test.want) != test.compliant {
-			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(test.vs), StructToJson(test.want), test.compliant)
-		}
+		func() {
+			defer func() { _ = recover() }()
+			test.input.Eval(&test.vs)
+			if reflect.DeepEqual(test.vs, test.want) != test.compliant || test.panic != (recover() != nil) {
+				t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(test.vs), StructToJson(test.want), test.compliant)
+			}
+		}()
 	}
 }
 

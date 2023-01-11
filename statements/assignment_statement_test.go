@@ -35,23 +35,27 @@ func TestAssignment(t *testing.T) {
 type TestAssigmentEvalCase struct {
 	input     AssignmentStatement
 	want      ValueState
+	panic     bool
 	compliant bool
 }
 
 var testAssignmentEvalTests = []TestAssigmentEvalCase{
 
-	{AssignmentStatement{"x", NumberExpression(1)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, true},
-	{AssignmentStatement{"x", NumberExpression(0)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, false},
-	{AssignmentStatement{"x", BoolExpression(true)}, ValueState{map[string]Value{"x": {ValueInt, 0, true}}}, false},
+	{AssignmentStatement{"x", NumberExpression(1)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, false, true},
+	{AssignmentStatement{"x", NumberExpression(0)}, ValueState{map[string]Value{"x": {ValueInt, 1, false}}}, false, false},
+	{AssignmentStatement{"x", BoolExpression(true)}, ValueState{map[string]Value{"x": {ValueInt, 0, true}}}, true, false},
 }
 
 func TestAssignmentEval(t *testing.T) {
 	for _, test := range testAssignmentEvalTests {
 		got := ValueState{map[string]Value{"x": {ValueInt, 1, false}}}
-		test.input.Eval(&got)
-		if reflect.DeepEqual(got, test.want) != test.compliant {
-			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
-		}
+		func() {
+			defer func() { _ = recover() }()
+			test.input.Eval(&got)
+			if reflect.DeepEqual(got, test.want) != test.compliant || test.panic != (recover() != nil) {
+				t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
+			}
+		}()
 	}
 }
 

@@ -63,23 +63,25 @@ type TestTypeAssignCase struct {
 	inputString string
 	inputType   Type
 	want        TypeState
-
-	compliant bool
+	panic       bool
+	compliant   bool
 }
 
 var testTypeAssignTests = []TestTypeAssignCase{
-	{TypeState{map[string]Type{"x": TypeInt}}, "x", TypeInt, TypeState{map[string]Type{"x": TypeInt}}, true},
-	{TypeState{map[string]Type{"x": TypeInt}}, "x", TypeBool, TypeState{map[string]Type{"x": TypeInt}}, true},
-
-	{TypeState{map[string]Type{}}, "x", TypeBool, TypeState{map[string]Type{}}, true},
+	{TypeState{map[string]Type{"x": TypeInt}}, "x", TypeInt, TypeState{map[string]Type{"x": TypeInt}}, false, true},
+	{TypeState{map[string]Type{"x": TypeInt}}, "x", TypeBool, TypeState{map[string]Type{"x": TypeInt}}, true, true},
+	{TypeState{map[string]Type{}}, "x", TypeBool, TypeState{map[string]Type{}}, true, true},
 }
 
 func TestTypeAssign(t *testing.T) {
 	for _, test := range testTypeAssignTests {
-		test.inputTs.Assign(test.inputString, test.inputType)
-		if reflect.DeepEqual(test.inputTs, test.want) != test.compliant {
-			t.Errorf("got %s not equal to want %s", StructToJson(test.inputTs), StructToJson(test.want))
-		}
+		func() {
+			defer func() { _ = recover() }()
+			test.inputTs.Assign(test.inputString, test.inputType)
+			if reflect.DeepEqual(test.inputTs, test.want) != test.compliant || test.panic != (recover() != nil) {
+				t.Errorf("got %s not equal to want %s", StructToJson(test.inputTs), StructToJson(test.want))
+			}
+		}()
 	}
 }
 
@@ -111,22 +113,26 @@ type TestPopTypeScopeCase struct {
 	inputTs    TypeState
 	want       TypeState
 	wantLength int
+	panic      bool
 	compliant  bool
 }
 
 var testPopTypeScopeTests = []TestPopTypeScopeCase{
 
-	{TypeState{map[string]Type{}, map[string]Type{}}, TypeState{map[string]Type{}}, 1, true},
-	{TypeState{map[string]Type{}}, TypeState{map[string]Type{}}, 1, true},
-	{TypeState{map[string]Type{"x": TypeInt}, map[string]Type{}}, TypeState{map[string]Type{"x": TypeInt}}, 1, true},
+	{TypeState{map[string]Type{}, map[string]Type{}}, TypeState{map[string]Type{}}, 1, false, true},
+	{TypeState{map[string]Type{}}, TypeState{map[string]Type{}}, 1, false, true},
+	{TypeState{map[string]Type{"x": TypeInt}, map[string]Type{}}, TypeState{map[string]Type{"x": TypeInt}}, 1, false, true},
 }
 
 func TestTypeTypeScope(t *testing.T) {
 	for _, test := range testPopTypeScopeTests {
-		PopTypeScope(&test.inputTs)
-		if (reflect.DeepEqual(test.inputTs, test.want) && len(test.inputTs) == test.wantLength) != test.compliant {
-			t.Errorf("got %s not equal to want %s, length from got %d length from want %d", StructToJson(test.inputTs), StructToJson(test.want), len(test.inputTs), test.wantLength)
-		}
+		func() {
+			defer func() { _ = recover() }()
+			PopTypeScope(&test.inputTs)
+			if (reflect.DeepEqual(test.inputTs, test.want) && len(test.inputTs) == test.wantLength) != test.compliant || test.panic != (recover() != nil) {
+				t.Errorf("got %s not equal to want %s, length from got %d length from want %d", StructToJson(test.inputTs), StructToJson(test.want), len(test.inputTs), test.wantLength)
+			}
+		}()
 	}
 }
 
@@ -150,6 +156,30 @@ func TestGetCurrentTypeScope(t *testing.T) {
 		got := test.inputTs.GetCurrentTypeScope()
 		if reflect.DeepEqual(got, test.want) != test.compliant {
 			t.Errorf("got %s not equal to want %s", StructToJson(got), StructToJson(test.want))
+		}
+	}
+}
+
+// LookUpTypeByVariableName tests the LookUpTypeByVariableName function
+type TestLookUpTypeByVariableNameCase struct {
+	inputTs   TypeState
+	typeName  string
+	wantType  Type
+	wantBool  bool
+	compliant bool
+}
+
+var testLookUpTypeByVariableNameTests = []TestLookUpTypeByVariableNameCase{
+	{TypeState{map[string]Type{"x": TypeInt}, map[string]Type{"x": TypeBool}}, "x", TypeBool, true, true},
+	{TypeState{map[string]Type{"x": TypeInt}, map[string]Type{}}, "x", TypeInt, true, true},
+	{TypeState{map[string]Type{"x": TypeInt}}, "y", TypeIllTyped, false, true},
+}
+
+func TestLookUpTypeByVariableNameScope(t *testing.T) {
+	for _, test := range testLookUpTypeByVariableNameTests {
+		gotType, gotBool := test.inputTs.LookUpTypeByVariableName(test.typeName)
+		if (gotType == test.wantType && gotBool == test.wantBool) != test.compliant {
+			t.Errorf("gotType %s not equal to wantType %s or gotBool %s not equal to wantBool %s", StructToJson(gotType), StructToJson(test.wantType), StructToJson(gotBool), StructToJson(test.wantBool))
 		}
 	}
 }
