@@ -19,3 +19,8 @@ jobs:
           go-version-file: 'go.mod'
       - name: Run tests
         run: go test -v -coverprofile=coverage.coverprofile ./...
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage.coverprofile
