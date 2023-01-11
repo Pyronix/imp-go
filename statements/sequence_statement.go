@@ -1,21 +1,22 @@
 package statements
 
-import "imp/types"
+import . "imp/types"
 
-type Sequence [2]Statement
+type SequenceStatement [2]Statement
 
-func (stmt Sequence) Pretty() string {
+func Sequence(x, y Statement) Statement {
+	return SequenceStatement{x, y}
+}
+
+func (stmt SequenceStatement) Pretty() string {
 	return stmt[0].Pretty() + "; " + stmt[1].Pretty()
 }
 
-func (stmt Sequence) Eval(s types.ValueState) {
+func (stmt SequenceStatement) Eval(s *ValueState) {
 	stmt[0].Eval(s)
 	stmt[1].Eval(s)
 }
 
-func (stmt Sequence) Check(t types.TypeState) bool {
-	if !stmt[0].Check(t) {
-		return false
-	}
-	return stmt[1].Check(t)
+func (stmt SequenceStatement) Check(t *TypeState) bool {
+	return stmt[0].Check(t) && stmt[1].Check(t)
 }

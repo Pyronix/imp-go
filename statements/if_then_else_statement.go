@@ -1,27 +1,50 @@
 package statements
 
 import (
-	"fmt"
-	"imp/types"
+	. "imp/types"
 )
 
 type IfThenElseStatement struct {
-	cond     types.Expression
-	thenStmt Statement
-	elseStmt Statement
+	cond          Expression
+	thenBlockStmt BlockStatement
+	elseBlockStmt BlockStatement
 }
 
-func (ite IfThenElseStatement) Eval(s types.ValueState) {
+func Ite(x Expression, y BlockStatement, z BlockStatement) Statement {
+	return IfThenElseStatement{x, y, z}
+}
+
+func (ite IfThenElseStatement) Eval(s *ValueState) {
 	v := ite.cond.Eval(s)
-	if v.ValueType == types.ValueBool {
+	if v.ValueType == ValueBool {
 		switch {
 		case v.BoolValue:
-			ite.thenStmt.Eval(s)
+			ite.thenBlockStmt.Eval(s)
 		case !v.BoolValue:
-			ite.elseStmt.Eval(s)
+			ite.elseBlockStmt.Eval(s)
 		}
-
 	} else {
-		fmt.Printf("if-then-else Eval fail")
+		panic("if-then-else Eval fail")
 	}
+}
+
+func (ite IfThenElseStatement) Pretty() string {
+	var x string
+	x = "if "
+	x += ite.cond.Pretty()
+	x += " "
+	x += ite.thenBlockStmt.Pretty()
+	x += " else "
+	x += ite.elseBlockStmt.Pretty()
+
+	return x
+}
+
+func (ite IfThenElseStatement) Check(t *TypeState) bool {
+	ty := ite.cond.Infer(t)
+	if ty != TypeBool {
+		return false
+	}
+
+	return ite.thenBlockStmt.Check(t) && ite.elseBlockStmt.Check(t)
 }

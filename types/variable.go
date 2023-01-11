@@ -6,8 +6,8 @@ func (x Variable) Pretty() string {
 	return (string)(x)
 }
 
-func (x Variable) Eval(s ValueState) Value {
-	val, ok := s[(string)(x)]
+func (x Variable) Eval(s *ValueState) Value {
+	val, ok := s.LookUpValueByVariableName((string)(x))
 	if ok {
 		return val
 	} else {
@@ -15,8 +15,8 @@ func (x Variable) Eval(s ValueState) Value {
 	}
 }
 
-func (x Variable) Infer(t TypeState) Type {
-	typ, ok := t[(string)(x)]
+func (x Variable) Infer(t *TypeState) Type {
+	typ, ok := t.LookUpTypeByVariableName((string)(x))
 	if ok {
 		return typ
 	} else {

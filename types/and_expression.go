@@ -10,13 +10,13 @@ func (e AndExpression) Pretty() string {
 	var x string
 
 	x = e[0].Pretty()
-	x += "&&"
+	x += " && "
 	x += e[1].Pretty()
 
 	return x
 }
 
-func (e AndExpression) Eval(s ValueState) Value {
+func (e AndExpression) Eval(s *ValueState) Value {
 	b1 := e[0].Eval(s)
 	b2 := e[1].Eval(s)
 	switch {
@@ -28,7 +28,7 @@ func (e AndExpression) Eval(s ValueState) Value {
 	return UndefinedValue()
 }
 
-func (e AndExpression) Infer(t TypeState) Type {
+func (e AndExpression) Infer(t *TypeState) Type {
 	t1 := e[0].Infer(t)
 	t2 := e[1].Infer(t)
 	if t1 == TypeBool && t2 == TypeBool {

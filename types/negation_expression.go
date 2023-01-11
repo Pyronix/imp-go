@@ -17,7 +17,7 @@ func (e NegationExpression) Pretty() string {
 	return x
 }
 
-func (e NegationExpression) Eval(s ValueState) Value {
+func (e NegationExpression) Eval(s *ValueState) Value {
 	b := e.Expression.Eval(s)
 	switch {
 	case b.ValueType == ValueBool:
@@ -26,7 +26,7 @@ func (e NegationExpression) Eval(s ValueState) Value {
 	return UndefinedValue()
 }
 
-func (e NegationExpression) Infer(t TypeState) Type {
+func (e NegationExpression) Infer(t *TypeState) Type {
 	t1 := e.Expression.Infer(t)
 	if t1 == TypeBool {
 		return TypeBool

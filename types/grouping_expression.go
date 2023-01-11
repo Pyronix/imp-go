@@ -18,7 +18,7 @@ func (e GroupingExpression) Pretty() string {
 	return x
 }
 
-func (e GroupingExpression) Eval(s ValueState) Value {
+func (e GroupingExpression) Eval(s *ValueState) Value {
 	b := e.Expression.Eval(s)
 	switch {
 	case b.ValueType == ValueBool:
@@ -29,6 +29,6 @@ func (e GroupingExpression) Eval(s ValueState) Value {
 	return UndefinedValue()
 }
 
-func (e GroupingExpression) Infer(t TypeState) Type {
+func (e GroupingExpression) Infer(t *TypeState) Type {
 	return e.Expression.Infer(t)
 }

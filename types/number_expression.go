@@ -14,10 +14,10 @@ func (x NumberExpression) Pretty() string {
 	return strconv.Itoa(int(x))
 }
 
-func (x NumberExpression) Eval(s ValueState) Value {
+func (x NumberExpression) Eval(s *ValueState) Value {
 	return IntValue((int)(x))
 }
 
-func (x NumberExpression) Infer(t TypeState) Type {
+func (x NumberExpression) Infer(t *TypeState) Type {
 	return TypeInt
 }

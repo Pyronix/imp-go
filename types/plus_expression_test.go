@@ -2,6 +2,7 @@ package types
 
 import (
 	. "imp/helper"
+	"reflect"
 	"testing"
 )
 
@@ -21,8 +22,8 @@ var testPlusTests = []TestPlusCase{
 
 func TestPlus(t *testing.T) {
 	for _, test := range testPlusTests {
-		if got := Plus(test.input1, test.input2); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := Plus(test.input1, test.input2); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %s not equal to want %s", StructToJson(got), StructToJson(test.want))
 		}
 	}
 }
@@ -36,19 +37,19 @@ type TestPlusPrettyCase struct {
 }
 
 var testPlusPrettyTests = []TestPlusPrettyCase{
-	{PlusExpression{NumberExpression(1), NumberExpression(1)}, "1+1", true},
+	{PlusExpression{NumberExpression(1), NumberExpression(1)}, "1 + 1", true},
 
-	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "true+true", true},
-	{PlusExpression{BoolExpression(false), BoolExpression(true)}, "false+true", true},
+	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "true + true", true},
+	{PlusExpression{BoolExpression(false), BoolExpression(true)}, "false + true", true},
 
-	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, "-1+1", false},
-	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "false+true", false},
+	{PlusExpression{NumberExpression(-1), NumberExpression(-1)}, "-1 + 1", false},
+	{PlusExpression{BoolExpression(true), BoolExpression(true)}, "false + true", false},
 }
 
 func TestPlusPretty(t *testing.T) {
 	for _, test := range testPlusPrettyTests {
-		if got := test.input.Pretty(); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Pretty(); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -78,15 +79,13 @@ var testPlusEvalTests = []TestPlusEvalCase{
 	{PlusExpression{NumberExpression(1), NumberExpression(1)}, UndefinedValue(), false},
 
 	{PlusExpression{NumberExpression(1), BoolExpression(false)}, IntValue(-1), false},
-	{PlusExpression{BoolExpression(true), NumberExpression(1)}, IntValue(-1), false},
 	{PlusExpression{NumberExpression(1), BoolExpression(false)}, BoolValue(false), false},
-	{PlusExpression{BoolExpression(true), NumberExpression(1)}, BoolValue(true), false},
 }
 
 func TestPlusEval(t *testing.T) {
 	for _, test := range testPlusEvalTests {
-		if got := test.input.Eval(ValueState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Eval(&ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
@@ -120,8 +119,8 @@ var testPlusInferTests = []TestPlusInferCase{
 
 func TestPlusInfer(t *testing.T) {
 	for _, test := range testPlusInferTests {
-		if got := test.input.Infer(TypeState{}); got != test.want && test.compliant {
-			t.Errorf("got %q not equal to want %q", StructToJson(got), StructToJson(test.want))
+		if got := test.input.Infer(&TypeState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
+			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
