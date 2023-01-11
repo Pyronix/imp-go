@@ -1,5 +1,8 @@
 # IMP Go
 
+![GitHub Workflow Status](https://github.com/Pyronix/imp-go/workflows/CI/badge.svg)
+[![codecov](https://codecov.io/gh/Pyronix/imp-go/branch/main/graph/badge.svg)](https://codecov.io/gh/Pyronix/imp-go)
+
 As a apart of the elective course "Modellbasierte Softwareentwicklung"   
 at the Hochschule Karlsruhe – University of Applied Sciences (HKA) this group project aims at implementing a
 - Typechecker
