@@ -3,60 +3,94 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/urfave/cli/v2"
 	"imp/parser"
 	"imp/types"
+	"io"
+	"log"
 	"os"
 )
 
 func main() {
-	repl()
+	app := &cli.App{
+		UseShortOptionHandling: true,
+		Action: func(cCtx *cli.Context) error {
+			repl()
+			return nil
+		},
+		Commands: []*cli.Command{
+			{
+				Name:  "run",
+				Usage: "runs the given program",
+				Action: func(cCtx *cli.Context) error {
+					input := cCtx.Args().Get(0)
+
+					file, err := os.Open(input)
+					if err != nil {
+						return err
+					}
+
+					program := parser.NewParserFromReader(file).ParseProgram()
+
+					typeScope := &types.TypeState{}
+					types.PushTypeScope(typeScope)
+
+					valueScope := &types.ValueState{}
+					types.PushValueScope(valueScope)
+
+					if !program.Check(typeScope) {
+						panic(fmt.Errorf("statement is ill typed"))
+					}
+
+					program.Eval(valueScope)
+
+					return nil
+				},
+			},
+		},
+	}
+
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func repl() {
 	reader := bufio.NewReader(os.Stdin)
 
-	typeScope := types.TypeState{}
-	valueScope := types.ValueState{}
+	typeScope := &types.TypeState{}
+	types.PushTypeScope(typeScope)
+
+	valueScope := &types.ValueState{}
+	types.PushValueScope(valueScope)
 
 	for {
 		fmt.Print("> ")
 		text, err := reader.ReadString('\n')
 		if err != nil {
+			if err == io.EOF {
+				return
+			}
+
 			panic(err)
 		}
-		fmt.Print(" => ")
 
-		program, err := parse(text)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
+		func() {
+			defer func() {
+				err := recover()
+				if err != nil {
+					fmt.Println(err)
+				}
+			}()
 
-		_, err = typeCheck(program, typeScope)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
+			program := parser.NewParser(text).ParseProgram()
 
-		v := program.Eval(valueScope)
-		fmt.Println(types.ShowVal(v))
+			if !program.Check(typeScope) {
+				panic(fmt.Errorf("statement is ill typed"))
+			}
+
+			v := program.Eval(valueScope)
+			fmt.Printf(" => %s\n", types.ShowVal(v))
+		}()
 	}
-}
-
-func parse(input string) (types.Expression, error) {
-	return parser.NewParser(input).ParseExpression()
-}
-
-func typeCheck(program types.Expression, scope types.TypeState) (bool, error) {
-	t := program.Infer(scope)
-
-	if t == types.TypeIllTyped {
-		return false, fmt.Errorf("statement is ill typed")
-	}
-
-	return true, nil
-}
-
-func evaluate(program types.Expression, scope types.ValueState) types.Value {
-	return program.Eval(scope)
 }

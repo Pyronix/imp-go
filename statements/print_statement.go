@@ -1,6 +1,9 @@
 package statements
 
-import . "imp/types"
+import (
+	"fmt"
+	. "imp/types"
+)
 
 type PrintStatement struct {
 	Expression
@@ -14,8 +17,11 @@ func (print PrintStatement) Pretty() string {
 	return "print " + print.Expression.Pretty()
 }
 
-func (print PrintStatement) Eval(s *ValueState) {
-	print.Expression.Eval(s)
+func (print PrintStatement) Eval(s *ValueState) Value {
+	value := print.Expression.Eval(s)
+	fmt.Println(ShowVal(value))
+
+	return value
 }
 
 func (print PrintStatement) Check(t *TypeState) bool {

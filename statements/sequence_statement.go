@@ -12,9 +12,9 @@ func (stmt SequenceStatement) Pretty() string {
 	return stmt[0].Pretty() + "; " + stmt[1].Pretty()
 }
 
-func (stmt SequenceStatement) Eval(s *ValueState) {
+func (stmt SequenceStatement) Eval(s *ValueState) Value {
 	stmt[0].Eval(s)
-	stmt[1].Eval(s)
+	return stmt[1].Eval(s)
 }
 
 func (stmt SequenceStatement) Check(t *TypeState) bool {

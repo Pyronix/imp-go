@@ -14,17 +14,16 @@ func Ite(x Expression, y BlockStatement, z BlockStatement) Statement {
 	return IfThenElseStatement{x, y, z}
 }
 
-func (ite IfThenElseStatement) Eval(s *ValueState) {
+func (ite IfThenElseStatement) Eval(s *ValueState) Value {
 	v := ite.cond.Eval(s)
-	if v.ValueType == ValueBool {
-		switch {
-		case v.BoolValue:
-			ite.thenBlockStmt.Eval(s)
-		case !v.BoolValue:
-			ite.elseBlockStmt.Eval(s)
-		}
-	} else {
+	if v.ValueType != ValueBool {
 		panic("if-then-else Eval fail")
+	}
+
+	if v.BoolValue {
+		return ite.thenBlockStmt.Eval(s)
+	} else {
+		return ite.elseBlockStmt.Eval(s)
 	}
 }
 

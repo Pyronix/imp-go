@@ -13,14 +13,14 @@ func While(cond Expression, blockStmt BlockStatement) Statement {
 	return WhileStatement{cond, blockStmt}
 }
 
-func (whi WhileStatement) Eval(s *ValueState) {
+func (whi WhileStatement) Eval(s *ValueState) Value {
 	for {
 		v := whi.cond.Eval(s)
 		if v.ValueType != ValueBool {
 			panic("while Eval fail")
 		}
 		if !v.BoolValue {
-			break
+			return UndefinedValue()
 		}
 		whi.blockStmt.Eval(s)
 	}

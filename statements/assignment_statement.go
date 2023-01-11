@@ -13,8 +13,8 @@ func Assignment(x string, y Expression) Statement {
 	return AssignmentStatement{x, y}
 }
 
-func (ass AssignmentStatement) Eval(s *ValueState) {
-	s.Assign(ass.lhs, ass.rhs.Eval(s))
+func (ass AssignmentStatement) Eval(s *ValueState) Value {
+	return s.Assign(ass.lhs, ass.rhs.Eval(s))
 }
 
 func (ass AssignmentStatement) Pretty() string {

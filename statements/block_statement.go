@@ -16,10 +16,12 @@ func (block BlockStatement) Pretty() string {
 	return "{" + block.stmt.Pretty() + "}"
 }
 
-func (block BlockStatement) Eval(s *ValueState) {
+func (block BlockStatement) Eval(s *ValueState) Value {
 	PushValueScope(s)
-	block.stmt.Eval(s)
+	value := block.stmt.Eval(s)
 	PopValueScope(s)
+
+	return value
 }
 
 func (block BlockStatement) Check(t *TypeState) bool {
