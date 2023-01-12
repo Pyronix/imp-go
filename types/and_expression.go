@@ -18,6 +18,9 @@ func (e AndExpression) Pretty() string {
 
 func (e AndExpression) Eval(s *ValueState) Value {
 	b1 := e[0].Eval(s)
+	if b1.ValueType != ValueBool {
+		return UndefinedValue()
+	}
 	b2 := e[1].Eval(s)
 	switch {
 	case b1.ValueType == ValueBool && b1.BoolValue == false:
@@ -29,9 +32,10 @@ func (e AndExpression) Eval(s *ValueState) Value {
 }
 
 func (e AndExpression) Infer(t *TypeState) Type {
-	t1 := e[0].Infer(t)
-	t2 := e[1].Infer(t)
-	if t1 == TypeBool && t2 == TypeBool {
+	if t1 := e[0].Infer(t); t1 != TypeBool {
+		return TypeIllTyped
+	}
+	if t2 := e[1].Infer(t); t2 == TypeBool {
 		return TypeBool
 	}
 	return TypeIllTyped

@@ -77,6 +77,7 @@ var testOrEvalTests = []TestOrEvalCase{
 	{OrExpression{BoolExpression(true), BoolExpression(false)}, BoolValue(true), true},
 
 	{OrExpression{NumberExpression(-1), BoolExpression(true)}, UndefinedValue(), true},
+	{OrExpression{BoolExpression(false), NumberExpression(-1)}, UndefinedValue(), true},
 	{OrExpression{BoolExpression(true), NumberExpression(-1)}, BoolValue(true), true},
 	{OrExpression{NumberExpression(-1), NumberExpression(-1)}, UndefinedValue(), true},
 
