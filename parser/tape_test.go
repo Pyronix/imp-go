@@ -1,9 +1,42 @@
 package parser
 
 import (
+	"fmt"
 	"testing"
 	"unicode/utf8"
 )
+
+type MockReader struct {
+	nextSlice     []byte
+	nextByteCount int
+	nextError     error
+}
+
+func (m *MockReader) Read(b []byte) (n int, err error) {
+	copy(b, m.nextSlice)
+	return m.nextByteCount, m.nextError
+}
+
+func TestNewTapeFromReader(t *testing.T) {
+	testError := fmt.Errorf("test")
+
+	defer func() {
+		err := recover()
+		if err != testError {
+			t.Errorf("expected NewTapeFromReader to panic with test error, got %q", err)
+		}
+	}()
+
+	reader := &MockReader{
+		[]byte{},
+		0,
+		testError,
+	}
+
+	NewTapeFromReader(reader)
+
+	t.Errorf("expected NewTapeFromReader to panic, but it succeeded")
+}
 
 func TestTapePositionControl(t *testing.T) {
 	reader := NewTapeFromString("abc")
@@ -109,5 +142,14 @@ func TestTapeRewind(t *testing.T) {
 
 	if reader.Rewind() != EOFRune {
 		t.Errorf("Expected reader.Rewind() to return eof when reading before data")
+	}
+}
+
+func TestReadSlice(t *testing.T) {
+	tape := NewTapeFromString("abc")
+	var slice []rune
+
+	if slice = tape.ReadSlice(5, 3); len(slice) != 0 {
+		t.Errorf("expected ReadSlice() to return an empty slice when start is after the end")
 	}
 }

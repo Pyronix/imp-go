@@ -19,7 +19,7 @@ type Tokenizer struct {
 	tokens     chan Token
 }
 
-type LexerStateFunc func(*Tokenizer) LexerStateFunc
+type TokenizerStateFunc func(*Tokenizer) TokenizerStateFunc
 
 func TokenizeString(input string) *Tape[Token] {
 	return TokenizeFromReader(strings.NewReader(input))
@@ -122,8 +122,8 @@ func (l *Tokenizer) takeExactly(str string) bool {
 	return true
 }
 
-func (l *Tokenizer) errorf(format string, args ...interface{}) LexerStateFunc {
-	return func(l *Tokenizer) LexerStateFunc {
+func (l *Tokenizer) errorf(format string, args ...interface{}) TokenizerStateFunc {
+	return func(l *Tokenizer) TokenizerStateFunc {
 		l.tokens <- Token{
 			l.tokenStart,
 			ERROR,
@@ -134,7 +134,7 @@ func (l *Tokenizer) errorf(format string, args ...interface{}) LexerStateFunc {
 	}
 }
 
-func tokenizeCode(l *Tokenizer) LexerStateFunc {
+func tokenizeCode(l *Tokenizer) TokenizerStateFunc {
 	for {
 		switch next := l.runes.Next(); {
 		case next == EOFRune:
@@ -182,7 +182,7 @@ func tokenizeCode(l *Tokenizer) LexerStateFunc {
 	}
 }
 
-func tokenizeWord(l *Tokenizer) LexerStateFunc {
+func tokenizeWord(l *Tokenizer) TokenizerStateFunc {
 	// check for reserved words
 	if l.takeExactly("while") && !strings.ContainsRune(alphaNumeric+"_", l.runes.Peek()) {
 		l.emit(WHILE)
@@ -212,14 +212,14 @@ func tokenizeWord(l *Tokenizer) LexerStateFunc {
 	return tokenizeIdentifier
 }
 
-func tokenizeIdentifier(l *Tokenizer) LexerStateFunc {
+func tokenizeIdentifier(l *Tokenizer) TokenizerStateFunc {
 	l.takeMany(alphaNumeric + "_")
 	l.emit(IDENTIFIER)
 
 	return tokenizeCode
 }
 
-func tokenizeInt(l *Tokenizer) LexerStateFunc {
+func tokenizeInt(l *Tokenizer) TokenizerStateFunc {
 	l.take("-")
 	l.takeMany(numbers)
 

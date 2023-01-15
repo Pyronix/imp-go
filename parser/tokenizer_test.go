@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -233,7 +234,7 @@ var nextTests = []nextTest{
 	}},
 }
 
-func TestLexer(t *testing.T) {
+func TestTokenizer(t *testing.T) {
 	for _, test := range nextTests {
 		tape := TokenizeString(test.input)
 
@@ -244,5 +245,33 @@ func TestLexer(t *testing.T) {
 				t.Errorf("Testing %q on call %d: expected %s got %s", test.input, callNo, expected, actual)
 			}
 		}
+	}
+}
+
+func TestTakeMany(t *testing.T) {
+	tokenizer := Tokenizer{
+		runes:      NewTapeFromReader(strings.NewReader("abc")),
+		tokenStart: 0,
+		tokens:     make(chan Token),
+	}
+
+	if tokenizer.takeMany("123") != false {
+		t.Errorf("expected takeMany() to return false when no rune could be taken");
+	}
+}
+
+func TestTakeExactly(t *testing.T) {
+	tokenizer := Tokenizer{
+		runes:      NewTapeFromReader(strings.NewReader("abc")),
+		tokenStart: 0,
+		tokens:     make(chan Token),
+	}
+
+	if tokenizer.takeExactly("abfe") != false {
+		t.Errorf("expected takeExactly() to return false when runes could not be taken");
+	}
+
+	if tokenizer.runes.position != 0 {
+		t.Errorf("expected takeExactly() to not change rune tape position when failed");
 	}
 }
