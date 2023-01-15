@@ -141,13 +141,18 @@ var testValueAssignTests = []TestValueAssignCase{
 
 func TestValueAssign(t *testing.T) {
 	for _, test := range testValueAssignTests {
-		func() {
-			defer func() { _ = recover() }()
+		if test.panic {
+			func() {
+				defer func() { _ = recover() }()
+				test.inputVs.Assign(test.inputString, test.inputValue)
+				t.Errorf("expected panic but it is not")
+			}()
+		} else {
 			test.inputVs.Assign(test.inputString, test.inputValue)
-			if reflect.DeepEqual(test.inputVs, test.want) != test.compliant || test.panic != (recover() != nil) {
+			if reflect.DeepEqual(test.inputVs, test.want) != test.compliant {
 				t.Errorf("got %s not equal to want %s", StructToJson(test.inputVs), StructToJson(test.want))
 			}
-		}()
+		}
 	}
 }
 
@@ -192,13 +197,19 @@ var testPopValueScopeTests = []TestPopValueScopeCase{
 
 func TestPopValueScope(t *testing.T) {
 	for _, test := range testPopValueScopeTests {
-		func() {
-			defer func() { _ = recover() }()
+
+		if test.panic {
+			func() {
+				defer func() { _ = recover() }()
+				PopValueScope(&test.inputVs)
+				t.Errorf("expected panic but it is not")
+			}()
+		} else {
 			PopValueScope(&test.inputVs)
-			if (reflect.DeepEqual(test.inputVs, test.want) && len(test.inputVs) == test.wantLength) != test.compliant || test.panic != (recover() != nil) {
+			if (reflect.DeepEqual(test.inputVs, test.want) && len(test.inputVs) == test.wantLength) != test.compliant {
 				t.Errorf("got %s not equal to want %s, length from got %d length from want %d", StructToJson(test.inputVs), StructToJson(test.want), len(test.inputVs), test.wantLength)
 			}
-		}()
+		}
 	}
 }
 

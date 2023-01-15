@@ -75,13 +75,19 @@ var testTypeAssignTests = []TestTypeAssignCase{
 
 func TestTypeAssign(t *testing.T) {
 	for _, test := range testTypeAssignTests {
-		func() {
-			defer func() { _ = recover() }()
+
+		if test.panic {
+			func() {
+				defer func() { _ = recover() }()
+				test.inputTs.Assign(test.inputString, test.inputType)
+				t.Errorf("expected panic but it is not")
+			}()
+		} else {
 			test.inputTs.Assign(test.inputString, test.inputType)
-			if reflect.DeepEqual(test.inputTs, test.want) != test.compliant || test.panic != (recover() != nil) {
+			if reflect.DeepEqual(test.inputTs, test.want) != test.compliant {
 				t.Errorf("got %s not equal to want %s", StructToJson(test.inputTs), StructToJson(test.want))
 			}
-		}()
+		}
 	}
 }
 
@@ -120,19 +126,24 @@ type TestPopTypeScopeCase struct {
 var testPopTypeScopeTests = []TestPopTypeScopeCase{
 
 	{TypeState{map[string]Type{}, map[string]Type{}}, TypeState{map[string]Type{}}, 1, false, true},
-	{TypeState{map[string]Type{}}, TypeState{map[string]Type{}}, 1, false, true},
+	{TypeState{map[string]Type{}}, TypeState{map[string]Type{}}, 1, true, true},
 	{TypeState{map[string]Type{"x": TypeInt}, map[string]Type{}}, TypeState{map[string]Type{"x": TypeInt}}, 1, false, true},
 }
 
 func TestTypeTypeScope(t *testing.T) {
 	for _, test := range testPopTypeScopeTests {
-		func() {
-			defer func() { _ = recover() }()
+		if test.panic {
+			func() {
+				defer func() { _ = recover() }()
+				PopTypeScope(&test.inputTs)
+				t.Errorf("expected panic but it is not")
+			}()
+		} else {
 			PopTypeScope(&test.inputTs)
-			if (reflect.DeepEqual(test.inputTs, test.want) && len(test.inputTs) == test.wantLength) != test.compliant || test.panic != (recover() != nil) {
+			if (reflect.DeepEqual(test.inputTs, test.want) && len(test.inputTs) == test.wantLength) != test.compliant {
 				t.Errorf("got %s not equal to want %s, length from got %d length from want %d", StructToJson(test.inputTs), StructToJson(test.want), len(test.inputTs), test.wantLength)
 			}
-		}()
+		}
 	}
 }
 

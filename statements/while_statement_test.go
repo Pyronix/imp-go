@@ -49,16 +49,17 @@ var testWhileEvalTests = []TestWhileEvalCase{
 func TestEvalWhile(t *testing.T) {
 	for _, test := range testWhileEvalTests {
 		got := ValueState{map[string]Value{"x": {ValueInt, 0, false}}}
-		func() {
-			defer func() { _ = recover() }()
+		if test.panic {
+			func() {
+				defer func() { _ = recover() }()
+				test.input.Eval(&got)
+				t.Errorf("expected panic but it is not")
+			}()
+		} else {
 			test.input.Eval(&got)
-			if reflect.DeepEqual(got, test.want) != test.compliant || test.panic != (recover() != nil) {
+			if reflect.DeepEqual(got, test.want) != test.compliant {
 				t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 			}
-		}()
-
-		if reflect.DeepEqual(got, test.want) != test.compliant {
-			t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(got), StructToJson(test.want), test.compliant)
 		}
 	}
 }
