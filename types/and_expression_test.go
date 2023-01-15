@@ -76,6 +76,7 @@ var testAndEvalTests = []TestAndEvalCase{
 	{AndExpression{BoolExpression(true), BoolExpression(true)}, BoolValue(true), true},
 	{AndExpression{BoolExpression(true), BoolExpression(false)}, BoolValue(false), true},
 	{AndExpression{BoolExpression(false), BoolExpression(true)}, BoolValue(false), true},
+	{AndExpression{BoolExpression(true), NumberExpression(1)}, UndefinedValue(), true},
 
 	{AndExpression{NumberExpression(-1), BoolExpression(true)}, UndefinedValue(), true},
 	{AndExpression{NumberExpression(-1), NumberExpression(-1)}, UndefinedValue(), true},
@@ -90,7 +91,7 @@ var testAndEvalTests = []TestAndEvalCase{
 func TestAndEval(t *testing.T) {
 	for _, test := range testAndEvalTests {
 		if got := test.input.Eval(&ValueState{}); (reflect.DeepEqual(got, test.want)) != test.compliant {
-			//t.Errorf("got %s not equal to want %s, test should be %t reflect %t", StructToJson(got), StructToJson(test.want), test.compliant, reflect.DeepEqual(got, test.want))
+			t.Errorf("got %s not equal to want %s, test should be %t reflect %t", StructToJson(got), StructToJson(test.want), test.compliant, reflect.DeepEqual(got, test.want))
 		}
 	}
 }

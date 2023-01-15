@@ -51,13 +51,19 @@ var testIfThenElseEvalTests = []TestIfThenElseEvalCase{
 
 func TestEvalIfThenElse(t *testing.T) {
 	for _, test := range testIfThenElseEvalTests {
-		func() {
-			defer func() { _ = recover() }()
+		if test.panic {
+			func() {
+				defer func() { _ = recover() }()
+				test.input.Eval(&test.vs)
+				t.Errorf("expected panic but it is not")
+
+			}()
+		} else {
 			test.input.Eval(&test.vs)
-			if reflect.DeepEqual(test.vs, test.want) != test.compliant || test.panic != (recover() != nil) {
+			if reflect.DeepEqual(test.vs, test.want) != test.compliant {
 				t.Errorf("got %s not equal to want %s, test should be %t", StructToJson(test.vs), StructToJson(test.want), test.compliant)
 			}
-		}()
+		}
 	}
 }
 

@@ -81,6 +81,7 @@ var TestEqualityEvalTests = []TestEqualityEvalCase{
 	{EqualityExpression{NumberExpression(1), NumberExpression(-1)}, BoolValue(false), true},
 	{EqualityExpression{BoolExpression(true), NumberExpression(1)}, UndefinedValue(), true},
 	{EqualityExpression{NumberExpression(1), BoolExpression(true)}, UndefinedValue(), true},
+	{EqualityExpression{PlusExpression{BoolExpression(true), NumberExpression(1)}}, UndefinedValue(), true},
 
 	{EqualityExpression{BoolExpression(true), NumberExpression(1)}, BoolValue(true), false},
 	{EqualityExpression{BoolExpression(false), NumberExpression(1)}, IntValue(1), false},
@@ -108,6 +109,8 @@ var TestEqualityInferTests = []TestEqualityInferCase{
 	{EqualityExpression{NumberExpression(-1), NumberExpression(-1)}, TypeBool, true},
 	{EqualityExpression{BoolExpression(true), BoolExpression(true)}, TypeBool, true},
 	{EqualityExpression{NumberExpression(-1), BoolExpression(true)}, TypeIllTyped, true},
+	{EqualityExpression{PlusExpression{BoolExpression(true), NumberExpression(1)}, BoolExpression(true)}, TypeIllTyped, true},
+	{EqualityExpression{AndExpression{NumberExpression(1), BoolExpression(true)}, BoolExpression(true)}, TypeIllTyped, true},
 
 	{EqualityExpression{NumberExpression(-1), BoolExpression(true)}, TypeInt, false},
 	{EqualityExpression{NumberExpression(-1), BoolExpression(true)}, TypeBool, false},

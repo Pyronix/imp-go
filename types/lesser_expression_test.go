@@ -59,6 +59,7 @@ type TestLesserEvalCase struct {
 
 var TestLesserEvalTests = []TestLesserEvalCase{
 	{LesserExpression{NumberExpression(1), NumberExpression(2)}, BoolValue(true), true},
+	{LesserExpression{BoolExpression(true), NumberExpression(1)}, UndefinedValue(), true},
 	{LesserExpression{NumberExpression(1), BoolExpression(true)}, UndefinedValue(), true},
 	{LesserExpression{NumberExpression(2), NumberExpression(1)}, BoolValue(false), true},
 	{LesserExpression{NumberExpression(1), NumberExpression(2)}, BoolValue(false), false},
@@ -81,6 +82,7 @@ type TestLesserInferCase struct {
 var TestLesserInferTests = []TestLesserInferCase{
 	{LesserExpression{NumberExpression(1), NumberExpression(2)}, TypeBool, true},
 	{LesserExpression{NumberExpression(1), BoolExpression(true)}, TypeIllTyped, true},
+	{LesserExpression{BoolExpression(true), NumberExpression(2)}, TypeIllTyped, true},
 	{LesserExpression{NumberExpression(1), NumberExpression(2)}, TypeInt, false},
 }
 
