@@ -233,7 +233,7 @@ var nextTests = []nextTest{
 	}},
 }
 
-func TestLexer(t *testing.T) {
+func TestTokenizer(t *testing.T) {
 	for _, test := range nextTests {
 		tape := TokenizeString(test.input)
 
