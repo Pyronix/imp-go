@@ -14,6 +14,30 @@ for a given simple imperative language (IMP).
 Details for IMP can be found here:  
 [https://sulzmann.github.io/ModelBasedSW/imp.html#(1)](https://sulzmann.github.io/ModelBasedSW/imp.html#(1))
 
+## Using
+First build the program by using
+```bash 
+go build
+```
+
+### REPL
+After building run
+```bash
+./imp
+```
+to bring up the IMP REPL
+
+### Run from file
+You can run IMP programs from a given file by using
+```bash
+./imp run <path>
+```
+
+e.g.
+```bash
+./imp run ./examples/fizz_buzz.imp
+```
+
 ## Testing
 ### Export Test Coverage as HTML
 
@@ -22,5 +46,5 @@ Details for IMP can be found here:
 
 Command:
 ```
-go test -coverprofile cov.out <path> && go tool cover -html=cov.out -o cov.out.html
+go test -coverprofile cov.out ./... && go tool cover -html=cov.out -o cov.out.html
 ```
