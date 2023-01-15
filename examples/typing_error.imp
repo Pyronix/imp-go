@@ -1,0 +1,4 @@
+x := 1;
+
+// assigning a bool to an integer variable should be ill typed
+x = true

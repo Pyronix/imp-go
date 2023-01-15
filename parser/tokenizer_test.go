@@ -232,6 +232,13 @@ var nextTests = []nextTest{
 		{6, BLOCKCLOSE, "}"},
 		{7, EOF, ""},
 	}},
+
+	// Tests for comments
+	{"1; // this is a comment \n2", []Token{
+		{0, INT, "1"},
+		{1, SEMICOLON, ";"},
+		{25, INT, "2"},
+	}},
 }
 
 func TestTokenizer(t *testing.T) {
@@ -256,7 +263,7 @@ func TestTakeMany(t *testing.T) {
 	}
 
 	if tokenizer.takeMany("123") != false {
-		t.Errorf("expected takeMany() to return false when no rune could be taken");
+		t.Errorf("expected takeMany() to return false when no rune could be taken")
 	}
 }
 
@@ -268,10 +275,10 @@ func TestTakeExactly(t *testing.T) {
 	}
 
 	if tokenizer.takeExactly("abfe") != false {
-		t.Errorf("expected takeExactly() to return false when runes could not be taken");
+		t.Errorf("expected takeExactly() to return false when runes could not be taken")
 	}
 
 	if tokenizer.runes.position != 0 {
-		t.Errorf("expected takeExactly() to not change rune tape position when failed");
+		t.Errorf("expected takeExactly() to not change rune tape position when failed")
 	}
 }

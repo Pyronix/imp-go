@@ -142,6 +142,12 @@ func tokenizeCode(l *Tokenizer) TokenizerStateFunc {
 			return nil
 		case unicode.IsSpace(next):
 			l.ignore()
+		case next == '/' && l.runes.Peek() == '/':
+			// ignore comments, they start with '//' and end with a new line
+			for l.runes.Peek() != '\n' {
+				l.runes.Next()
+			}
+			l.ignore()
 		case next == '{':
 			l.emit(BLOCKOPEN)
 		case next == '}':

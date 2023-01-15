@@ -1,21 +1,25 @@
+// This program implements the (in)famous fizz buzz problem
+// Due to limitations in IMP, we print -35 instead of "FizzBuzz", -3 instead of "Fizz" and -5 instead of "FizzBuzz"
+
 x := 0;
-
 while x < 101 {
+    // we have no modulo operator, so we need to subtract 3 as many times as possible
     divisible_by_3 := false;
+    rest := x;
+    while !(rest < 3) {
+        rest = rest + -3
+    };
+    divisible_by_3 = rest == 0;
+
+    // the same goes for 5
     divisible_by_5 := false;
-
-    temp := x;
-    while !(temp < 3) {
-        temp = temp + -3
+    rest = x;
+    while !(rest < 5) {
+        rest = rest + -5
     };
-    divisible_by_3 = temp == 0;
+    divisible_by_5 = rest == 0;
 
-    temp = x;
-    while !(temp < 5) {
-        temp = temp + -5
-    };
-    divisible_by_5 = temp == 0;
-
+    // also we have no "else if", so checking all conditions produces nasty nested code...
     if divisible_by_3 && divisible_by_5 {
         print -35
     } else {
