@@ -68,7 +68,6 @@ var testNewParserFromReaderTests = []TestNewParseFromReaderCase{
 }
 
 func TestNewParserFromReader(t *testing.T) {
-
 	for _, test := range testNewParserFromReaderTests {
 		got := *NewParserFromReader(test.input)
 		if (reflect.DeepEqual(got.tokens, test.wantParser.tokens) && got.position == test.wantParser.position) != test.compliant {
@@ -112,7 +111,6 @@ var testParseProgramTests = []TestParseProgramCase{
 }
 
 func TestParseProgram(t *testing.T) {
-
 	for _, test := range testParseProgramTests {
 		if test.panic {
 			func() {
@@ -127,4 +125,34 @@ func TestParseProgram(t *testing.T) {
 			}
 		}
 	}
+}
+
+// direct test to cover edge cases
+func TestParsePrimary(t *testing.T) {
+	var parser Parser
+
+	parser = Parser{
+		tokens: &Tape[Token]{
+			data: []Token{
+				{
+					0,
+					BOOL,
+					"not_true_or_false",
+				},
+			},
+			eofValue: Token{},
+			size:     1,
+			position: 0,
+		},
+		position: 0,
+	}
+
+	defer func() {
+		err := recover()
+		if err == nil {
+			t.Errorf("expected parsePrimary() to panic when receiving an invalid bool literal")
+		}
+	}()
+
+	parser.parsePrimary()
 }
