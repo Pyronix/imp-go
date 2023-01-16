@@ -12,7 +12,6 @@ func (x BoolExpression) Pretty() string {
 	} else {
 		return "false"
 	}
-
 }
 
 func (x BoolExpression) Eval(s *ValueState) Value {

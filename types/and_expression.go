@@ -18,13 +18,15 @@ func (e AndExpression) Pretty() string {
 
 func (e AndExpression) Eval(s *ValueState) Value {
 	b1 := e[0].Eval(s)
-	b2 := e[1].Eval(s)
-	switch {
-	case b1.ValueType == ValueBool && b1.BoolValue == false:
+	if b1.ValueType == ValueBool && b1.BoolValue == false {
 		return BoolValue(false)
-	case b1.ValueType == ValueBool && b2.ValueType == ValueBool:
+	}
+	
+	b2 := e[1].Eval(s)
+	if b1.ValueType == ValueBool && b2.ValueType == ValueBool {
 		return BoolValue(b1.BoolValue && b2.BoolValue)
 	}
+
 	return UndefinedValue()
 }
 
