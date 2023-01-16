@@ -24,21 +24,17 @@ func (e PlusExpression) Pretty() string {
 
 func (e PlusExpression) Eval(s *ValueState) Value {
 	n1 := e[0].Eval(s)
-	if n1.ValueType != ValueInt {
-		return UndefinedValue()
-	}
-	if n2 := e[1].Eval(s); n2.ValueType != ValueInt {
-		return UndefinedValue()
-	} else {
+	n2 := e[1].Eval(s)
+	if n1.ValueType == ValueInt && n2.ValueType == ValueInt {
 		return IntValue(n1.IntValue + n2.IntValue)
 	}
+	return UndefinedValue()
 }
 
 func (e PlusExpression) Infer(t *TypeState) Type {
-	if t1 := e[0].Infer(t); t1 != TypeInt {
-		return TypeIllTyped
-	}
-	if t2 := e[1].Infer(t); t2 == TypeInt {
+	t1 := e[0].Infer(t)
+	t2 := e[1].Infer(t)
+	if t1 == TypeInt && t2 == TypeInt {
 		return TypeInt
 	}
 	return TypeIllTyped
